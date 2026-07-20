@@ -36,7 +36,7 @@
     <!-- Main Content Area with Grid Background -->
     <main class="grid-background">
         
-        <!-- 1. HOME SECTION (Landing Page Utama) -->
+        <!-- 1. HOME SECTION -->
         <section id="home" class="tab-content active hero-section">
             <div class="hero-content">
                 <div class="badge-container">
@@ -67,16 +67,14 @@
             </div>
         </section>
 
-        <!-- 2. DOCUMENTATION SECTION (Tampilan Grid Kategori Sesuai Gambar) -->
+        <!-- 2. DOCUMENTATION SECTION -->
         <section id="documentation" class="tab-content">
             <div class="docs-header">
                 <h1 class="section-title">ENDPOINTS ACROSS CATEGORIES</h1>
                 <p class="section-subtitle">All free. Just follow the usage rules.</p>
             </div>
             
-            <!-- Grid Kategori -->
             <div class="categories-grid">
-                <!-- Kategori AI -->
                 <div class="category-card" onclick="openCategory('ai')">
                     <div class="icon-wrapper icon-ai">
                         <i class="fas fa-brain"></i>
@@ -85,7 +83,6 @@
                     <p class="endpoint-count">1 endpoint</p>
                 </div>
 
-                <!-- Kategori Downloader (Contoh Tambahan) -->
                 <div class="category-card" onclick="openCategory('downloader')">
                     <div class="icon-wrapper icon-download">
                         <i class="fas fa-download"></i>
@@ -94,7 +91,6 @@
                     <p class="endpoint-count">0 endpoints</p>
                 </div>
 
-                <!-- Kategori Tools (Contoh Tambahan) -->
                 <div class="category-card" onclick="openCategory('tools')">
                     <div class="icon-wrapper icon-tools">
                         <i class="fas fa-tools"></i>
@@ -104,7 +100,6 @@
                 </div>
             </div>
 
-            <!-- Base URL info di bawah kategori -->
             <div class="card" style="margin-top: 3rem;">
                 <h3>Base URL</h3>
                 <p>Semua request harus diarahkan ke URL dasar berikut:</p>
@@ -115,30 +110,63 @@
         <!-- 3. ENDPOINTS SECTION -->
         <section id="endpoints" class="tab-content">
             <h2>Daftar Endpoints</h2>
-            <p>Pilih kategori di halaman Dokumentasi untuk menyaring atau lihat semua di bawah ini:</p>
+            <p style="margin-bottom: 2rem;">Silakan tes request secara live pada masing-masing endpoint di bawah ini.</p>
             
             <!-- Group Kategori AI -->
             <div class="endpoint-group" data-category="ai">
-                <div class="card">
-                    <h3>
+                
+                <!-- Endpoint 1: Claude AI -->
+                <div class="card api-card" data-base-path="/api/ai/claude" data-param-name="prompt">
+                    <div class="api-card-header">
                         <span class="endpoint-badge badge-get">GET</span> 
-                        /api/ai/claude
-                    </h3>
-                    <p>Berinteraksi dengan Artificial Intelligence model Claude untuk menjawab berbagai macam pertanyaan teks secara cerdas.</p>
-                    
-                    <div style="margin: 1rem 0;">
-                        <p style="margin-bottom: 0.5rem; color: #ffffff;"><strong>Query Parameters:</strong></p>
-                        <ul style="padding-left: 1.5rem; color: #a3a3a3;">
-                            <li><code>text</code> (Required) : Pertanyaan atau instruksi yang dikirim ke AI.</li>
-                        </ul>
+                        <span class="api-path">/api/ai/claude</span>
                     </div>
-
-                    <p><strong>Contoh Request:</strong></p>
-                    <pre><code>https://vanz-api-one.vercel.app/api/ai/claude?text=siapa penemu lampu?</code></pre>
+                    <p class="api-desc">Berinteraksi dengan Artificial Intelligence model Claude menggunakan parameter prompt teks.</p>
+                    
+                    <!-- Uji Coba Request (Interactive Test Form) -->
+                    <div class="api-test-container">
+                        <div class="api-input-group">
+                            <input type="text" class="api-test-input" placeholder="Masukkan prompt kamu di sini (cth: Siapa kamu?)..." value="Siapa kamu?">
+                            <button class="btn-api-send" onclick="testRequest(this)" title="Test Request">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Output URL Tampilan (Bisa diklik atau di-copy) -->
+                        <div class="api-url-preview-box">
+                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/ai/claude?prompt=Siapa%20kamu?</span>
+                            <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
+
             </div>
             
-            <!-- Nanti kalau ada kategori downloader tinggal bungkus pakai div data-category="downloader" -->
+            <!-- Contoh Struktur jika nanti kamu mau menambah endpoint baru (misal Downloader) -->
+            <!-- 
+            <div class="endpoint-group" data-category="downloader" style="display:none;">
+                <div class="card api-card" data-base-path="/api/download/tiktok" data-param-name="url">
+                    <div class="api-card-header">
+                        <span class="endpoint-badge badge-get">GET</span>
+                        <span class="api-path">/api/download/tiktok</span>
+                    </div>
+                    <p class="api-desc">Download video TikTok tanpa watermark lewat tautan video.</p>
+                    <div class="api-test-container">
+                        <div class="api-input-group">
+                            <input type="text" class="api-test-input" placeholder="Masukkan URL Video..." value="https://tiktok.com/xxxx">
+                            <button class="btn-api-send" onclick="testRequest(this)"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                        <div class="api-url-preview-box">
+                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/download/tiktok?url=...</span>
+                            <button class="btn-copy-url" onclick="copyUrlFromBox(this)"><i class="far fa-copy"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            -->
+            
         </section>
 
         <!-- 4. STATUS SECTION -->
@@ -158,8 +186,8 @@
             <p>Riwayat pembaruan sistem pada VANZ API.</p>
             <div class="card">
                 <h3>Versi 1.0.0 (Terbaru)</h3>
-                <p>• Rilis perdana website VANZ API dengan arsitektur kategori terintegrasi.<br>
-                   • Menambahkan endpoint utama <code>/api/ai/claude</code>.</p>
+                <p>• Integrasi fitur Live Test Request langsung di halaman endpoint.<br>
+                   • Pengalihan parameter AI ke basis <code>?prompt=</code> untuk fleksibilitas bot.</p>
             </div>
         </section>
 
