@@ -57,14 +57,45 @@ function openCategory(categoryName) {
     });
 }
 
+function handleFileUpload(fileInput) {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    const card = fileInput.closest(".api-card");
+    const urlInput = card.querySelector('.multi-param[data-param="ppurl"]');
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        urlInput.value = e.target.result;
+        updateUrlBox(card);
+    };
+    reader.readAsDataURL(file);
+}
+
 function updateUrlBox(cardElement) {
     const basePath = cardElement.getAttribute("data-base-path");
-    const paramName = cardElement.getAttribute("data-param-name");
-    const inputValue = cardElement.querySelector(".api-test-input").value;
+    const type = cardElement.getAttribute("data-type");
     const urlDisplay = cardElement.querySelector(".url-text-display");
+    
+    let builtUrl = `${DEPLOYED_BASE_URL}${basePath}`;
 
-    const encodedValue = encodeURIComponent(inputValue);
-    const builtUrl = `${DEPLOYED_BASE_URL}${basePath}?${paramName}=${encodedValue}`;
+    if (type === "multi") {
+        const params = [];
+        const inputs = cardElement.querySelectorAll(".multi-param");
+        inputs.forEach(input => {
+            const key = input.getAttribute("data-param");
+            const val = input.value;
+            params.push(`${key}=${encodeURIComponent(val)}`);
+        });
+        if (params.length > 0) {
+            builtUrl += `?${params.join("&")}`;
+        }
+    } else {
+        const paramName = cardElement.getAttribute("data-param-name");
+        const inputValue = cardElement.querySelector(".api-test-input").value;
+        builtUrl += `?${paramName}=${encodeURIComponent(inputValue)}`;
+    }
+
     urlDisplay.textContent = builtUrl;
 }
 
@@ -77,11 +108,23 @@ function testRequest(buttonElement) {
     const jsonOutput = card.querySelector(".json-output");
     const imgContainer = card.querySelector(".image-output-container");
     const imgOutput = card.querySelector(".image-output");
-    const icon = buttonElement.querySelector("i");
-    const responseType = card.getAttribute("data-response-type");
     
+    let icon = buttonElement.querySelector("i");
+    let isMultiButton = false;
+    if (!icon) {
+        icon = buttonElement;
+        isMultiButton = true;
+    }
+    
+    const originalText = buttonElement.innerHTML;
+    if (isMultiButton) {
+        buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> GENERATING...';
+    } else {
+        icon.className = "fas fa-spinner fa-spin";
+    }
+
     resultBox.style.display = "block";
-    icon.className = "fas fa-spinner fa-spin";
+    const responseType = card.getAttribute("data-response-type");
 
     if (responseType === "image") {
         jsonOutput.style.display = "none";
@@ -89,13 +132,15 @@ function testRequest(buttonElement) {
         
         imgOutput.src = generatedUrl;
         imgOutput.onload = () => {
-            icon.className = "fas fa-paper-plane";
+            if (isMultiButton) buttonElement.innerHTML = originalText;
+            else icon.className = "fas fa-paper-plane";
         };
         imgOutput.onerror = () => {
             imgContainer.style.display = "none";
             jsonOutput.style.display = "block";
             jsonOutput.textContent = JSON.stringify({ error: "Failed to load image from API" }, null, 4);
-            icon.className = "fas fa-paper-plane";
+            if (isMultiButton) buttonElement.innerHTML = originalText;
+            else icon.className = "fas fa-paper-plane";
         };
     } else {
         imgContainer.style.display = "none";
@@ -106,11 +151,13 @@ function testRequest(buttonElement) {
             .then(response => response.json())
             .then(data => {
                 jsonOutput.textContent = JSON.stringify(data, null, 4);
-                icon.className = "fas fa-paper-plane";
+                if (isMultiButton) buttonElement.innerHTML = originalText;
+                else icon.className = "fas fa-paper-plane";
             })
             .catch(error => {
                 jsonOutput.textContent = JSON.stringify({ error: "Failed to fetch data", message: error.message }, null, 4);
-                icon.className = "fas fa-paper-plane";
+                if (isMultiButton) buttonElement.innerHTML = originalText;
+                else icon.className = "fas fa-paper-plane";
             });
     }
 }
