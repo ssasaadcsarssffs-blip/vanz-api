@@ -3,69 +3,100 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    /* Gunakan font Space Grotesk yang mirip dengan gambar referensi */
+    font-family: 'Space Grotesk', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
-    background-color: #0d1117;
-    color: #c9d1d9;
+    /* Latar belakang ungu gelap pekat */
+    background-color: #0c0018;
+    color: #e2e8f0;
     line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Latar belakang Grid yang terlihat di gambar referensi */
+.grid-background {
+    position: relative;
+    background-image: 
+        linear-gradient(rgba(107, 33, 168, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(107, 33, 168, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    background-position: center;
 }
 
 /* Navigation Bar */
 header {
-    background-color: #161b22;
-    border-bottom: 1px solid #30363d;
+    background-color: #07000e;
+    border-bottom: 1px solid rgba(139, 92, 246, 0.2);
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
 }
 
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 1rem 2rem;
+    padding: 1.2rem 3rem;
+}
+
+.logo-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.purple-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #8b5cf6;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #8b5cf6;
 }
 
 .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #58a6ff;
-    letter-spacing: 1px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -1px;
 }
 
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 1.5rem;
+    gap: 2rem;
 }
 
 .nav-links a {
-    color: #8b949e;
+    color: #94a3b8;
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.3s;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
     cursor: pointer;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .nav-links a:hover, .nav-links a.active {
-    color: #58a6ff;
+    color: #c4b5fd;
+    text-shadow: 0 0 8px rgba(196, 181, 253, 0.5);
 }
 
 /* Main Content Layout */
 main {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 2rem;
-    min-height: 70vh;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 3rem;
+    min-height: 80vh;
 }
 
 .tab-content {
     display: none;
-    animation: fadeIn 0.4s ease;
+    animation: fadeIn 0.5s ease;
 }
 
 .tab-content.active {
@@ -73,82 +104,110 @@ main {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 /* UI Components (Cards, Buttons, Codes) */
 h1, h2, h3 {
-    color: #f0f6fc;
+    color: #ffffff;
     margin-bottom: 1rem;
+    font-weight: 700;
 }
 
 p {
-    margin-bottom: 1rem;
-    color: #8b949e;
+    margin-bottom: 1.2rem;
+    color: #94a3b8;
 }
 
+/* Ganti Gaya Tombol Utama menjadi Ungu Lebar seperti di referensi */
 .btn {
-    display: inline-block;
-    background-color: #238636;
-    color: #ffffff;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 1.2rem 3rem;
+    border-radius: 12px;
     text-decoration: none;
-    font-weight: 600;
-    transition: background 0.2s;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
     border: none;
     cursor: pointer;
+    width: 100%;
+    max-width: 500px;
 }
 
-.btn:hover {
-    background-color: #2ea043;
+.btn-primary {
+    background-color: #8b5cf6;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #7c3aed;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+}
+
+.btn-primary i {
+    font-size: 1.2rem;
+}
+
+.arrow-right {
+    margin-left: auto;
+    font-size: 1.2rem;
 }
 
 .card {
-    background-color: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 6px;
-    padding: 1.5rem;
-    margin-bottom: 1rem;
+    background-color: #07000e;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.3s ease;
+}
+
+.card:hover {
+    border-color: rgba(139, 92, 246, 0.5);
 }
 
 /* Code & Endpoints Styling */
 code {
-    background-color: #21262d;
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    color: #ff7b72;
+    background-color: #1a012d;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    color: #c4b5fd;
     font-family: monospace;
+    font-size: 0.9em;
 }
 
 pre {
-    background-color: #161b22;
-    border: 1px solid #30363d;
-    padding: 1rem;
-    border-radius: 6px;
+    background-color: #07000e;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    padding: 1.5rem;
+    border-radius: 8px;
     overflow-x: auto;
-    margin: 1rem 0;
+    margin: 1.5rem 0;
 }
 
 pre code {
-    color: #c9d1d9;
+    color: #e2e8f0;
     padding: 0;
     background: none;
 }
 
 .endpoint-badge {
-    background-color: #1f6feb;
     color: white;
-    padding: 0.2rem 0.6rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    margin-right: 0.5rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-right: 0.7rem;
+    letter-spacing: 1px;
 }
 
 .badge-get { background-color: #2ea043; }
-.badge-post { background-color: #d29922; }
 
 /* Status Indicator */
 .status-online {
@@ -158,14 +217,121 @@ pre code {
     background-color: #3fb950;
     border-radius: 50%;
     margin-right: 0.5rem;
+    box-shadow: 0 0 10px #3fb950;
+}
+
+/* 
+   Hero Section Styling - Menirukan persis gambar 1000683440.jpg 
+*/
+.hero-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 80vh;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 800px;
+}
+
+.badge-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    background-color: rgba(139, 92, 246, 0.1);
+    padding: 0.6rem 1.5rem;
+    border-radius: 50px;
+    margin-bottom: 2rem;
+}
+
+.lightning-icon {
+    color: #c4b5fd;
+    font-size: 1rem;
+}
+
+.badge-text {
+    color: #c4b5fd;
+    font-weight: 500;
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+}
+
+.hero-title {
+    font-size: 6rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    letter-spacing: -3px;
+    line-height: 1;
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #c4b5fd;
+    margin-bottom: 3rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.hero-description {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    max-width: 600px;
+    margin-bottom: 4rem;
+    line-height: 1.8;
+}
+
+.action-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5rem;
+}
+
+.scroll-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    opacity: 0.7;
+}
+
+.scroll-text {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    letter-spacing: 2px;
+}
+
+.scroll-line {
+    width: 2px;
+    height: 40px;
+    background-color: #94a3b8;
+    border-radius: 2px;
 }
 
 /* Footer */
 footer {
     text-align: center;
-    padding: 2rem;
-    margin-top: 4rem;
-    border-top: 1px solid #30363d;
-    color: #8b949e;
+    padding: 3rem;
+    margin-top: 3rem;
+    border-top: 1px solid rgba(139, 92, 246, 0.2);
+    color: #94a3b8;
     font-size: 0.9rem;
+    background-color: #07000e;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .navbar { padding: 1rem 1.5rem; }
+    .nav-links { display: none; } /* Sembunyikan menu di mobile untuk kesederhanaan */
+    .hero-title { font-size: 4rem; }
+    .hero-subtitle { font-size: 1.2rem; }
+    main { padding: 2rem 1.5rem; }
+    .btn { padding: 1rem 2rem; font-size: 1rem; }
 }
