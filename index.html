@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanz Api - Developer Platform</title>
+    <!-- Menghubungkan ke folder CSS -->
+    <link rel="stylesheet" href="Css/style.css">
+</head>
+<body>
+
+    <!-- Header & Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">Vanz Api</div>
+            <ul class="nav-links">
+                <li><a class="nav-link active" data-target="home">Home</a></li>
+                <li><a class="nav-link" data-target="documentation">Documentation</a></li>
+                <li><a class="nav-link" data-target="endpoints">Endpoints</a></li>
+                <li><a class="nav-link" data-target="status">Status</a></li>
+                <li><a class="nav-link" data-target="changelog">Changelog</a></li>
+                <li><a class="nav-link" data-target="contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+        
+        <!-- 1. HOME SECTION -->
+        <section id="home" class="tab-content active">
+            <h1>Selamat Datang di Vanz Api</h1>
+            <p>Platform REST API gratis, cepat, dan stabil untuk kebutuhan pengembangan aplikasi dan bot Anda. Dibuat khusus dengan performa tinggi.</p>
+            <div class="card" style="margin-top: 2rem;">
+                <h3>Kenapa memilih Vanz Api?</h3>
+                <p>⚡ **Respon Cepat:** Server dioptimasi penuh tanpa hambatan delay.<br>
+                   🔒 **Aman:** Menggunakan enkripsi SSL modern.<br>
+                   🤖 **Mudah Digunakan:** Dokumentasi ringkas dan contoh kode siap pakai.</p>
+                <button class="btn API-nav-trigger" onclick="switchTab('documentation')">Mulai Sekarang</button>
+            </div>
+        </section>
+
+        <!-- 2. DOCUMENTATION SECTION -->
+        <section id="documentation" class="tab-content">
+            <h2>Dokumentasi Dasar</h2>
+            <p>Pelajari cara mengintegrasikan Vanz Api ke dalam projek aplikasi Anda.</p>
+            <div class="card">
+                <h3>Base URL</h3>
+                <p>Semua request harus diarahkan ke URL dasar berikut:</p>
+                <pre><code>https://api.vanzdev.xyz/v1</code></pre>
+            </div>
+            <div class="card">
+                <h3>Contoh Response (JSON)</h3>
+                <pre><code>{
+  "status": 200,
+  "creator": "Vanz Dev",
+  "result": {
+    "message": "Halo Dunia! Berhasil terhubung ke Vanz Api."
+  }
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- 3. ENDPOINTS SECTION -->
+        <section id="endpoints" class="tab-content">
+            <h2>Daftar Endpoints</h2>
+            <p>Berikut adalah daftar fitur API yang tersedia dan siap Anda gunakan.</p>
+            
+            <div class="card">
+                <h3><span class="endpoint-badge badge-get">GET</span> /downloader/tiktok</h3>
+                <p>Mengambil data video Tiktok tanpa watermark lewat URL.</p>
+                <p>Parameter: <code>?url=LINK_TIKTOK</code></p>
+            </div>
+
+            <div class="card">
+                <h3><span class="endpoint-badge badge-get">GET</span> /tools/ai</h3>
+                <p>Berinteraksi dengan kecerdasan buatan cerdas.</p>
+                <p>Parameter: <code>?query=PERTANYAAN</code></p>
+            </div>
+        </section>
+
+        <!-- 4. STATUS SECTION -->
+        <section id="status" class="tab-content">
+            <h2>Status Server</h2>
+            <p>Pantau performa dan uptime server Vanz Api secara real-time.</p>
+            <div class="card">
+                <h3><span class="status-online"></span> Semua Sistem Operasional</h3>
+                <p>Uptime Bulan Ini: <strong>99.98%</strong></p>
+                <p>Waktu Respon Rata-rata: <strong>120ms</strong></p>
+            </div>
+        </section>
+
+        <!-- 5. CHANGELOG SECTION -->
+        <section id="changelog" class="tab-content">
+            <h2>Catatan Perubahan (Changelog)</h2>
+            <p>Riwayat pembaruan sistem dan fitur terbaru pada Vanz Api.</p>
+            <div class="card">
+                <h3>Versi 1.2.0 (Terbaru)</h3>
+                <p>• Menambahkan fitur <code>/tools/ai</code>.<br>
+                   • Optimalisasi kecepatan respon database hingga 20% lebih cepat.</p>
+            </div>
+            <div class="card">
+                <h3>Versi 1.0.0</h3>
+                <p>• Rilis perdana website Vanz Api beserta fitur utama downloader.</p>
+            </div>
+        </section>
+
+        <!-- 6. CONTACT SECTION -->
+        <section id="contact" class="tab-content">
+            <h2>Hubungi Kami</h2>
+            <p>Punya pertanyaan, laporan bug, atau ingin bekerja sama? Silakan hubungi kami.</p>
+            <div class="card">
+                <h3>Kontak Developer</h3>
+                <p>📧 Email: <code>support@vanzdev.xyz</code></p>
+                <p>💬 Telegram: <code>@vanz_dev</code></p>
+                <button class="btn" onclick="location.href='mailto:support@vanzdev.xyz'">Kirim Email</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Vanz Api. Powered by Vanz Dev. All rights reserved.</p>
+    </footer>
+
+    <!-- Connect to Script -->
+    <script src="Script/script.js"></script>
+</body>
+</html>
