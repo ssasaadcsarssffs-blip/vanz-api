@@ -1,19 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vanz Api - Developer Platform</title>
+    <title>VANZ API - Layanan API Gratis untuk Developer</title>
     <!-- Menghubungkan ke folder CSS -->
     <link rel="stylesheet" href="Css/style.css">
+    <!-- Tambahkan Google Fonts untuk font yang sama persis -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Tambahkan perpustakaan ikon untuk ikon buku -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
     <!-- Header & Navigation -->
     <header>
         <nav class="navbar">
-            <div class="logo">Vanz Api</div>
+            <div class="logo-group">
+                <!-- Titik ungu kecil di sebelah logo seperti di referensi -->
+                <span class="purple-dot"></span>
+                <div class="logo">VANZ API</div>
+            </div>
             <ul class="nav-links">
+                <!-- Ganti menu lama menjadi Tab SPA -->
                 <li><a class="nav-link active" data-target="home">Home</a></li>
                 <li><a class="nav-link" data-target="documentation">Documentation</a></li>
                 <li><a class="nav-link" data-target="endpoints">Endpoints</a></li>
@@ -24,26 +35,51 @@
         </nav>
     </header>
 
-    <!-- Main Content Area -->
-    <main>
+    <!-- Main Content Area with Grid Background -->
+    <main class="grid-background">
         
-        <!-- 1. HOME SECTION -->
-        <section id="home" class="tab-content active">
-            <h1>Selamat Datang di Vanz Api</h1>
-            <p>Platform REST API gratis, cepat, dan stabil untuk kebutuhan pengembangan aplikasi dan bot Anda. Dibuat khusus dengan performa tinggi.</p>
-            <div class="card" style="margin-top: 2rem;">
-                <h3>Kenapa memilih Vanz Api?</h3>
-                <p>⚡ **Respon Cepat:** Server dioptimasi penuh tanpa hambatan delay.<br>
-                   🔒 **Aman:** Menggunakan enkripsi SSL modern.<br>
-                   🤖 **Mudah Digunakan:** Dokumentasi ringkas dan contoh kode siap pakai.</p>
-                <button class="btn API-nav-trigger" onclick="switchTab('documentation')">Mulai Sekarang</button>
+        <!-- 1. HOME SECTION - Landpage Utama (Seperti gambar 1000683440.jpg) -->
+        <section id="home" class="tab-content active hero-section">
+            <div class="hero-content">
+                <!-- Label atas -->
+                <div class="badge-container">
+                    <span class="lightning-icon">⚡</span>
+                    <span class="badge-text">BUILT FOR DEVELOPERS</span>
+                </div>
+
+                <!-- Judul Utama (Diubah menjadi VANZ API) -->
+                <h1 class="hero-title">VANZ API</h1>
+
+                <!-- Subjudul -->
+                <p class="hero-subtitle">FREE REST API</p>
+
+                <!-- Deskripsi -->
+                <p class="hero-description">
+                    Layanan API gratis dan andal yang dirancang untuk pengembangan aplikasi modern. 
+                    Dibangun dengan Node.js dan TypeScript, menghadirkan performa cepat, 
+                    endpoint stabil, dan integrasi mudah.
+                </p>
+
+                <!-- Action Button (Hanya READ DOCS, GitHub dihapus) -->
+                <div class="action-buttons">
+                    <button class="btn btn-primary btn-read-docs" onclick="switchTab('documentation')">
+                        <i class="fas fa-book-open"></i> READ DOCS
+                        <span class="arrow-right">→</span>
+                    </button>
+                </div>
+
+                <!-- Petunjuk Scroll di bagian bawah -->
+                <div class="scroll-indicator">
+                    <span class="scroll-text">SCROLL</span>
+                    <span class="scroll-line"></span>
+                </div>
             </div>
         </section>
 
         <!-- 2. DOCUMENTATION SECTION -->
         <section id="documentation" class="tab-content">
             <h2>Dokumentasi Dasar</h2>
-            <p>Pelajari cara mengintegrasikan Vanz Api ke dalam projek aplikasi Anda.</p>
+            <p>Pelajari cara mengintegrasikan VANZ API ke dalam projek aplikasi Anda.</p>
             <div class="card">
                 <h3>Base URL</h3>
                 <p>Semua request harus diarahkan ke URL dasar berikut:</p>
@@ -55,7 +91,7 @@
   "status": 200,
   "creator": "Vanz Dev",
   "result": {
-    "message": "Halo Dunia! Berhasil terhubung ke Vanz Api."
+    "message": "Halo Dunia! Berhasil terhubung ke VANZ API."
   }
 }</code></pre>
             </div>
@@ -86,14 +122,12 @@
                 <pre><code>https://vanz-api-one.vercel.app/api/ai/claude?text=siapa penemu lampu?</code></pre>
             </div>
             
-            <!-- Kalau nanti mau nambah endpoint baru lagi, tinggal paste di bawah sini ya! -->
-            
         </section>
 
         <!-- 4. STATUS SECTION -->
         <section id="status" class="tab-content">
             <h2>Status Server</h2>
-            <p>Pantau performa dan uptime server Vanz Api secara real-time.</p>
+            <p>Pantau performa dan uptime server VANZ API secara real-time.</p>
             <div class="card">
                 <h3><span class="status-online"></span> Semua Sistem Operasional</h3>
                 <p>Uptime Bulan Ini: <strong>99.98%</strong></p>
@@ -104,10 +138,10 @@
         <!-- 5. CHANGELOG SECTION -->
         <section id="changelog" class="tab-content">
             <h2>Catatan Perubahan (Changelog)</h2>
-            <p>Riwayat pembaruan sistem dan fitur terbaru pada Vanz Api.</p>
+            <p>Riwayat pembaruan sistem dan fitur terbaru pada VANZ API.</p>
             <div class="card">
                 <h3>Versi 1.0.0 (Terbaru)</h3>
-                <p>• Rilis perdana website Vanz Api di Vercel.<br>
+                <p>• Rilis perdana website VANZ API di Vercel.<br>
                    • Menambahkan endpoint utama <code>/api/ai/claude</code>.<br>
                    • Menggunakan domain baru <code>vanz-api-one.vercel.app</code>.</p>
             </div>
@@ -129,7 +163,7 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2026 Vanz Api. Powered by Vanz Dev. All rights reserved.</p>
+        <p>&copy; 2026 VANZ API. Powered by Vanz Dev. All rights reserved.</p>
     </footer>
 
     <!-- Menghubungkan ke folder Script -->
