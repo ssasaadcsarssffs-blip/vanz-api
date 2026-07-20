@@ -71,8 +71,33 @@ function updateUrlBox(cardElement) {
 function testRequest(buttonElement) {
     const card = buttonElement.closest(".api-card");
     updateUrlBox(card);
+    
     const generatedUrl = card.querySelector(".url-text-display").textContent;
-    window.open(generatedUrl, '_blank');
+    const resultBox = card.querySelector(".api-result-box");
+    const jsonOutput = card.querySelector(".json-output");
+    const icon = buttonElement.querySelector("i");
+    
+    resultBox.style.display = "block";
+    jsonOutput.textContent = "Loading response...";
+    icon.className = "fas fa-spinner fa-spin";
+    
+    fetch(generatedUrl)
+        .then(response => response.json())
+        .then(data => {
+            jsonOutput.textContent = JSON.stringify(data, null, 4);
+            icon.className = "fas fa-paper-plane";
+        })
+        .catch(error => {
+            jsonOutput.textContent = JSON.stringify({ error: "Failed to fetch data", message: error.message }, null, 4);
+            icon.className = "fas fa-paper-plane";
+        });
+}
+
+function clearResult(buttonElement) {
+    const resultBox = buttonElement.closest(".api-result-box");
+    const jsonOutput = resultBox.querySelector(".json-output");
+    jsonOutput.textContent = "";
+    resultBox.style.display = "none";
 }
 
 function copyUrlFromBox(buttonElement) {
