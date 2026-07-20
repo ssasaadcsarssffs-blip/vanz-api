@@ -2,6 +2,7 @@ import { createCanvas, loadImage, GlobalFonts } from '@napi-rs/canvas'
 import fs from 'fs'
 import path from 'path'
 import axios from 'axios'
+import FormData from 'form-data' // Pastikan sudah install package ini di package.json backend kamu
 
 const APPLE_EMOJI_JSON_URL = 'https://media.githubusercontent.com/media/Ditzzx-vibecoder/entahlah/main/emoji-apple.json'
 let appleEmojiMap = null
@@ -144,7 +145,7 @@ export default async function handler(req, res) {
       return res.status(400).json({
         status: false,
         creator: "Vanz API",
-        message: "Gagal mengambil asset gambar eksternal. Pastikan URL Foto Profil valid dan tidak memblokir server.",
+        message: "Gagal mengambil asset gambar eksternal. Pastikan URL Foto Profil valid.",
         detail: fetchError.message
       })
     }
@@ -200,8 +201,40 @@ export default async function handler(req, res) {
 
     const buffer = canvas.toBuffer('image/png')
 
-    res.setHeader("Content-Type", "image/png")
-    res.send(buffer)
+    // --- ALUR PROSES UPLOAD KE CLOUD YARDAN ---
+    const form = new FormData()
+    form.append('file', buffer, { filename: 'fakenotif.png', contentType: 'image/png' })
+
+    const uploadResponse = await axios.post('https://cloud.yardansh.com/upload', form, {
+      headers: {
+        ...form.getHeaders(),
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+      }
+    })
+
+    const uploadData = uploadResponse.data
+    let resultUrl = ""
+
+    if (uploadData && uploadData.url) {
+        resultUrl = uploadData.url;
+    } else if (uploadData && uploadData.file && uploadData.file.url) {
+        resultUrl = uploadData.file.url;
+    } else if (uploadData && uploadData.result) {
+        resultUrl = uploadData.result;
+    } else if (typeof uploadData === "string") {
+        resultUrl = uploadData;
+    }
+
+    if (!resultUrl) {
+      throw new Error("Gagal memperoleh URL gambar dari Cloud Yardan.")
+    }
+
+    // Kembalikan data dalam bentuk JSON
+    res.status(200).json({
+      status: true,
+      creator: "Vanz API",
+      result: resultUrl
+    })
 
   } catch (err) {
     res.status(500).json({
