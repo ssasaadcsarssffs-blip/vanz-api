@@ -1,3 +1,5 @@
+const DEPLOYED_BASE_URL = "https://vanz-api-one.vercel.app";
+
 document.addEventListener("DOMContentLoaded", () => {
     const navLinks = document.querySelectorAll(".nav-link");
     const tabContents = document.querySelectorAll(".tab-content");
@@ -19,7 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            // Jika pindah ke tab Endpoints secara manual dari Navbar, tampilkan semua tanpa filter
             if(targetTab === 'endpoints') {
                 document.querySelectorAll('.endpoint-group').forEach(group => {
                     group.style.display = 'block';
@@ -27,9 +28,16 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
+    const testInputs = document.querySelectorAll(".api-test-input");
+    testInputs.forEach(input => {
+        input.addEventListener("input", (e) => {
+            const card = e.target.closest(".api-card");
+            updateUrlBox(card);
+        });
+    });
 });
 
-// Fungsi Switch Halaman Utama
 function switchTab(tabId) {
     const targetLink = document.querySelector(`.nav-link[data-target="${tabId}"]`);
     if (targetLink) {
@@ -37,18 +45,50 @@ function switchTab(tabId) {
     }
 }
 
-// Fungsi Kategori Terhubung Otomatis ke Halaman Endpoints
 function openCategory(categoryName) {
-    // 1. Pindah Halaman ke tab Endpoints terlebih dahulu
     switchTab('endpoints');
-    
-    // 2. Filter isi endpoint berdasarkan kategori yang dipilih
     const groups = document.querySelectorAll('.endpoint-group');
     groups.forEach(group => {
         if (group.getAttribute('data-category') === categoryName) {
-            group.style.display = 'block'; // Tampilkan yang cocok
+            group.style.display = 'block';
         } else {
-            group.style.display = 'none';  // Sembunyikan kategori lain
+            group.style.display = 'none';
         }
+    });
+}
+
+function updateUrlBox(cardElement) {
+    const basePath = cardElement.getAttribute("data-base-path");
+    const paramName = cardElement.getAttribute("data-param-name");
+    const inputValue = cardElement.querySelector(".api-test-input").value;
+    const urlDisplay = cardElement.querySelector(".url-text-display");
+
+    const encodedValue = encodeURIComponent(inputValue);
+    const builtUrl = `${DEPLOYED_BASE_URL}${basePath}?${paramName}=${encodedValue}`;
+    urlDisplay.textContent = builtUrl;
+}
+
+function testRequest(buttonElement) {
+    const card = buttonElement.closest(".api-card");
+    updateUrlBox(card);
+    const generatedUrl = card.querySelector(".url-text-display").textContent;
+    window.open(generatedUrl, '_blank');
+}
+
+function copyUrlFromBox(buttonElement) {
+    const box = buttonElement.closest(".api-url-preview-box");
+    const textToCopy = box.querySelector(".url-text-display").textContent;
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const icon = buttonElement.querySelector("i");
+        icon.className = "fas fa-check";
+        icon.style.color = "#22c55e";
+        
+        setTimeout(() => {
+            icon.className = "far fa-copy";
+            icon.style.color = "";
+        }, 1500);
+    }).catch(err => {
+        console.error("Gagal menyalin text: ", err);
     });
 }
