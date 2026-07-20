@@ -11,7 +11,12 @@ const EMOJI_REGEX = /(\p{Emoji_Modifier_Base}\p{Emoji_Modifier}|\p{Emoji_Present
 const TMP_DIR = '/tmp'
 
 async function getbufer(url) {
-  const res = await axios.get(url, { responseType: 'arraybuffer' })
+  const res = await axios.get(url, { 
+    responseType: 'arraybuffer',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    }
+  })
   return Buffer.from(res.data)
 }
 
@@ -127,11 +132,22 @@ export default async function handler(req, res) {
     const baground = 'https://uploader.zenzxz.dpdns.org/uploads/1783938224798.png'
     const waIconUrl = 'https://uploader.zenzxz.dpdns.org/uploads/1783937277449.jpeg'
 
-    const [bgBuffer, ppBuffer, waIconBuffer] = await Promise.all([
-      getbufer(baground),
-      getbufer(ppurl),
-      getbufer(waIconUrl)
-    ])
+    let bgBuffer, ppBuffer, waIconBuffer
+    
+    try {
+      [bgBuffer, ppBuffer, waIconBuffer] = await Promise.all([
+        getbufer(baground),
+        getbufer(ppurl),
+        getbufer(waIconUrl)
+      ])
+    } catch (fetchError) {
+      return res.status(400).json({
+        status: false,
+        creator: "Vanz API",
+        message: "Gagal mengambil asset gambar eksternal. Pastikan URL Foto Profil valid dan tidak memblokir server.",
+        detail: fetchError.message
+      })
+    }
 
     const bg = await loadImage(bgBuffer)
     const ppImg = await loadImage(ppBuffer)
