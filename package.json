@@ -1,0 +1,11 @@
+{
+  "name": "vanz-api",
+  "version": "1.0.0",
+  "description": "Vanz Rest API Serverless",
+  "main": "api/fakenotif.js",
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.44",
+    "axios": "^1.6.0",
+    "form-data": "^4.0.1"
+  }
+}
