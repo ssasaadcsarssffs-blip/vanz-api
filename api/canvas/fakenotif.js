@@ -129,7 +129,7 @@ async function drawTextWithEmojis(ctx, text, x, y, fontSize, fontString) {
 }
 
 export default async function handler(req, res) {
-  const { ppurl, username, chat, tanggal, jam } = req.query
+  const { ppurl, username, chat, tanggal, jam, response } = req.query
 
   if (!ppurl || !username || !chat) {
     res.setHeader('Content-Type', 'application/json')
@@ -176,7 +176,6 @@ export default async function handler(req, res) {
     try {
       ppImg = await loadImage(ppBuffer)
     } catch (e) {
-      // Fallback otomatis pakai foto default kalau ppurl user error/SVG
       try {
         const defaultPpBuffer = await getbufer(waIconUrl)
         ppImg = await loadImage(defaultPpBuffer)
@@ -240,7 +239,17 @@ export default async function handler(req, res) {
 
     const buffer = canvas.toBuffer('image/png')
 
-    // Langsung kirim sebagai file gambar PNG (Auto Convert ke Image)
+    // PINTAR: Jika dari website meminta json, kembalikan json berisikan Base64 gambar
+    if (response === 'json') {
+      res.setHeader('Content-Type', 'application/json')
+      return res.status(200).json({
+        status: true,
+        creator: "Vanz API",
+        result: `data:image/png;base64,${buffer.toString('base64')}`
+      })
+    }
+
+    // Default: Kirim file gambar langsung (.png) jika diakses manual
     res.setHeader('Content-Type', 'image/png')
     res.setHeader('Cache-Control', 'public, max-age=86400')
     return res.status(200).send(buffer)
