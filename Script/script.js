@@ -62,7 +62,7 @@ function handleFileUpload(fileInput) {
     if (!file) return;
 
     const card = fileInput.closest(".api-card");
-    const urlInput = card.querySelector('.multi-param[data-param="ppurl"]');
+    const urlInput = card.querySelector('input[data-param="ppurl"]');
     const uploadButton = fileInput.previousElementSibling;
     
     const originalBtnContent = uploadButton.innerHTML;
@@ -81,6 +81,7 @@ function handleFileUpload(fileInput) {
         return response.json();
     })
     .then(data => {
+        console.log("Response Yardan Cloud:", data);
         let directUrl = "";
         
         if (data && data.url) {
@@ -89,13 +90,15 @@ function handleFileUpload(fileInput) {
             directUrl = data.file.url;
         } else if (data && data.result) {
             directUrl = data.result;
+        } else if (typeof data === "string") {
+            directUrl = data;
         }
 
-        if (directUrl) {
+        if (directUrl && urlInput) {
             urlInput.value = directUrl;
             updateUrlBox(card);
         } else {
-            alert("Gagal mendapatkan URL gambar. Response server tidak dikenali.");
+            alert("Gagal otomatis menaruh URL. Cek Console Log browser kamu untuk melihat respon server.");
         }
     })
     .catch(error => {
