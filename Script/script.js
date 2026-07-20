@@ -63,13 +63,42 @@ function handleFileUpload(fileInput) {
 
     const card = fileInput.closest(".api-card");
     const urlInput = card.querySelector('.multi-param[data-param="ppurl"]');
-    const reader = new FileReader();
+    const uploadButton = fileInput.previousElementSibling;
+    
+    const originalBtnContent = uploadButton.innerHTML;
+    uploadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+    uploadButton.disabled = true;
 
-    reader.onload = function (e) {
-        urlInput.value = e.target.result;
-        updateUrlBox(card);
-    };
-    reader.readAsDataURL(file);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    fetch("https://cloud.yardansh.com/upload", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Upload gagal");
+        return response.json();
+    })
+    .then(data => {
+        if (data && data.url) {
+            urlInput.value = data.url; 
+            updateUrlBox(card); 
+        } else if (data && data.file && data.file.url) {
+            urlInput.value = data.file.url;
+            updateUrlBox(card);
+        } else {
+            alert("Gagal mendapatkan URL gambar dari hosting.");
+        }
+    })
+    .catch(error => {
+        console.error("Error hosting image:", error);
+        alert("Terjadi kesalahan saat mengunggah gambar ke cloud.");
+    })
+    .finally(() => {
+        uploadButton.innerHTML = originalBtnContent;
+        uploadButton.disabled = false;
+    });
 }
 
 function updateUrlBox(cardElement) {
