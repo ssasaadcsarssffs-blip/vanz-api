@@ -29,12 +29,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    const testInputs = document.querySelectorAll(".api-test-input");
-    testInputs.forEach(input => {
-        input.addEventListener("input", (e) => {
+    // Menangani sinkronisasi real-time preview URL saat mengetik di input mana saja
+    document.addEventListener("input", (e) => {
+        if (e.target.classList.contains("api-test-input")) {
             const card = e.target.closest(".api-card");
-            updateUrlBox(card);
-        });
+            if (card) updateUrlBox(card);
+        }
     });
 });
 
@@ -54,60 +54,6 @@ function openCategory(categoryName) {
         } else {
             group.style.display = 'none';
         }
-    });
-}
-
-function handleFileUpload(fileInput) {
-    const file = fileInput.files[0];
-    if (!file) return;
-
-    const card = fileInput.closest(".api-card");
-    const urlInput = card.querySelector('input[data-param="ppurl"]');
-    const uploadButton = fileInput.previousElementSibling;
-    
-    const originalBtnContent = uploadButton.innerHTML;
-    uploadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
-    uploadButton.disabled = true;
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    fetch("https://cloud.yardansh.com/upload", {
-        method: "POST",
-        body: formData
-    })
-    .then(response => {
-        if (!response.ok) throw new Error("Upload gagal");
-        return response.json();
-    })
-    .then(data => {
-        console.log("Response Yardan Cloud:", data);
-        let directUrl = "";
-        
-        if (data && data.url) {
-            directUrl = data.url;
-        } else if (data && data.file && data.file.url) {
-            directUrl = data.file.url;
-        } else if (data && data.result) {
-            directUrl = data.result;
-        } else if (typeof data === "string") {
-            directUrl = data;
-        }
-
-        if (directUrl && urlInput) {
-            urlInput.value = directUrl;
-            updateUrlBox(card);
-        } else {
-            alert("Gagal otomatis menaruh URL. Cek Console Log browser kamu untuk melihat respon server.");
-        }
-    })
-    .catch(error => {
-        console.error("Error hosting image:", error);
-        alert("Terjadi kesalahan saat mengunggah gambar ke cloud.");
-    })
-    .finally(() => {
-        uploadButton.innerHTML = originalBtnContent;
-        uploadButton.disabled = false;
     });
 }
 
