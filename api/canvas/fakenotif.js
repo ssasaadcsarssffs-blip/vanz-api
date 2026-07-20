@@ -21,23 +21,6 @@ async function getbufer(url) {
   return Buffer.from(res.data)
 }
 
-// Fungsi deteksi diperketat untuk menangkap XML/SVG/HTML yang lolos
-function isValidImageBuffer(buffer) {
-  if (!buffer || buffer.length < 8) return false;
-  const headerStr = buffer.toString('utf8', 0, 100).toLowerCase();
-  
-  // Jika mengandung tanda-tanda dokumen web/vektor, tolak langsung
-  if (
-    headerStr.includes('<svg') || 
-    headerStr.includes('<?xml') || 
-    headerStr.includes('<!doctype') || 
-    headerStr.includes('<html')
-  ) {
-    return false;
-  }
-  return true;
-}
-
 function drawcircleimg(ctx, img, x, y, size) {
   ctx.save()
   ctx.beginPath()
@@ -107,8 +90,6 @@ async function getEmojiImage(emoji) {
     if (!b64) return null
     
     const buf = Buffer.from(b64, 'base64')
-    if (!isValidImageBuffer(buf)) return null;
-
     const img = await loadImage(buf)
     emojiImageCache.set(emoji, img)
     return img
@@ -148,11 +129,10 @@ async function drawTextWithEmojis(ctx, text, x, y, fontSize, fontString) {
 }
 
 export default async function handler(req, res) {
-  res.setHeader('Content-Type', 'application/json')
-
   const { ppurl, username, chat, tanggal, jam } = req.query
 
   if (!ppurl || !username || !chat) {
+    res.setHeader('Content-Type', 'application/json')
     return res.status(400).json({
       status: false,
       creator: "Vanz API",
@@ -175,6 +155,7 @@ export default async function handler(req, res) {
         getbufer(waIconUrl)
       ])
     } catch (fetchError) {
+      res.setHeader('Content-Type', 'application/json')
       return res.status(400).json({
         status: false,
         creator: "Vanz API",
@@ -183,24 +164,32 @@ export default async function handler(req, res) {
       })
     }
 
-    // Tracker Pelacakan Error dari Kamu (Sangat berguna untuk Debugging)
     let bg, ppImg, waImg
 
     try {
       bg = await loadImage(bgBuffer)
     } catch (e) {
+      res.setHeader('Content-Type', 'application/json')
       return res.status(400).json({ status: false, creator: "Vanz API", message: "Error pada Background", detail: e.message })
     }
 
     try {
       ppImg = await loadImage(ppBuffer)
     } catch (e) {
-      return res.status(400).json({ status: false, creator: "Vanz API", message: "Error pada Foto Profil (ppurl)", detail: e.message })
+      // Fallback otomatis pakai foto default kalau ppurl user error/SVG
+      try {
+        const defaultPpBuffer = await getbufer(waIconUrl)
+        ppImg = await loadImage(defaultPpBuffer)
+      } catch (errFallback) {
+        res.setHeader('Content-Type', 'application/json')
+        return res.status(400).json({ status: false, creator: "Vanz API", message: "Error pada Foto Profil (ppurl)", detail: e.message })
+      }
     }
 
     try {
       waImg = await loadImage(waIconBuffer)
     } catch (e) {
+      res.setHeader('Content-Type', 'application/json')
       return res.status(400).json({ status: false, creator: "Vanz API", message: "Error pada Icon WhatsApp", detail: e.message })
     }
 
@@ -251,52 +240,13 @@ export default async function handler(req, res) {
 
     const buffer = canvas.toBuffer('image/png')
 
-    const FormDataModule = await import('form-data')
-    const FormDataClass = FormDataModule.default || FormDataModule
-    const form = new FormDataClass()
-    
-    form.append('file', buffer, { filename: 'fakenotif.png', contentType: 'image/png' })
-
-    let uploadData;
-    try {
-      const uploadResponse = await axios.post('https://cloud.yardansh.com/upload', form, {
-        headers: {
-          ...form.getHeaders(),
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
-        }
-      })
-      uploadData = uploadResponse.data
-    } catch (uploadErr) {
-      return res.status(502).json({
-        status: false,
-        creator: "Vanz API",
-        message: "Gagal mengunggah hasil gambar ke Cloud Yardan.",
-        detail: uploadErr.message
-      })
-    }
-
-    let resultUrl = ""
-    if (uploadData && uploadData.url) resultUrl = uploadData.url
-    else if (uploadData && uploadData.file && uploadData.file.url) resultUrl = uploadData.file.url
-    else if (uploadData && uploadData.result) resultUrl = uploadData.result
-    else if (typeof uploadData === "string") resultUrl = uploadData
-
-    if (!resultUrl) {
-      return res.status(502).json({
-        status: false,
-        creator: "Vanz API",
-        message: "Format respons dari Cloud Yardan tidak dikenali.",
-        raw_response: uploadData
-      })
-    }
-
-    return res.status(200).json({
-      status: true,
-      creator: "Vanz API",
-      result: resultUrl
-    })
+    // Langsung kirim sebagai file gambar PNG (Auto Convert ke Image)
+    res.setHeader('Content-Type', 'image/png')
+    res.setHeader('Cache-Control', 'public, max-age=86400')
+    return res.status(200).send(buffer)
 
   } catch (err) {
+    res.setHeader('Content-Type', 'application/json')
     return res.status(500).json({
       status: false,
       creator: "Vanz API",
