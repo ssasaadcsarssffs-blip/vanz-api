@@ -81,14 +81,21 @@ function handleFileUpload(fileInput) {
         return response.json();
     })
     .then(data => {
+        let directUrl = "";
+        
         if (data && data.url) {
-            urlInput.value = data.url; 
-            updateUrlBox(card); 
+            directUrl = data.url;
         } else if (data && data.file && data.file.url) {
-            urlInput.value = data.file.url;
+            directUrl = data.file.url;
+        } else if (data && data.result) {
+            directUrl = data.result;
+        }
+
+        if (directUrl) {
+            urlInput.value = directUrl;
             updateUrlBox(card);
         } else {
-            alert("Gagal mendapatkan URL gambar dari hosting.");
+            alert("Gagal mendapatkan URL gambar. Response server tidak dikenali.");
         }
     })
     .catch(error => {
@@ -157,20 +164,41 @@ function testRequest(buttonElement) {
 
     if (responseType === "image") {
         jsonOutput.style.display = "none";
-        imgContainer.style.display = "block";
-        
-        imgOutput.src = generatedUrl;
-        imgOutput.onload = () => {
-            if (isMultiButton) buttonElement.innerHTML = originalText;
-            else icon.className = "fas fa-paper-plane";
-        };
-        imgOutput.onerror = () => {
-            imgContainer.style.display = "none";
-            jsonOutput.style.display = "block";
-            jsonOutput.textContent = JSON.stringify({ error: "Failed to load image from API" }, null, 4);
-            if (isMultiButton) buttonElement.innerHTML = originalText;
-            else icon.className = "fas fa-paper-plane";
-        };
+        imgContainer.style.display = "none";
+
+        fetch(generatedUrl)
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text || "Server Error"); });
+                }
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    return response.json().then(json => { throw new Error(JSON.stringify(json, null, 4)); });
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const objectURL = URL.createObjectURL(blob);
+                imgContainer.style.display = "block";
+                jsonOutput.style.display = "none";
+                imgOutput.src = objectURL;
+                
+                if (isMultiButton) buttonElement.innerHTML = originalText;
+                else icon.className = "fas fa-paper-plane";
+            })
+            .catch(error => {
+                imgContainer.style.display = "none";
+                jsonOutput.style.display = "block";
+                
+                try {
+                    jsonOutput.textContent = error.message;
+                } catch(e) {
+                    jsonOutput.textContent = JSON.stringify({ error: "Failed to render response", detail: error.message }, null, 4);
+                }
+                
+                if (isMultiButton) buttonElement.innerHTML = originalText;
+                else icon.className = "fas fa-paper-plane";
+            });
     } else {
         imgContainer.style.display = "none";
         jsonOutput.style.display = "block";
