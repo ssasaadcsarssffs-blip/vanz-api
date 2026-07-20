@@ -21,10 +21,8 @@ async function getbufer(url) {
   return Buffer.from(res.data)
 }
 
-// Fungsi untuk mengecek apakah buffer benar-benar gambar valid (bukan SVG / HTML / Error text)
 function isValidImageBuffer(buffer) {
   if (!buffer || buffer.length < 8) return false;
-  // Deteksi format SVG atau teks HTML
   const headerStr = buffer.toString('utf8', 0, 50).toLowerCase();
   if (headerStr.includes('<svg') || headerStr.includes('<!doctype') || headerStr.includes('<html')) {
     return false;
@@ -83,30 +81,41 @@ async function loadAppleEmojiMap() {
 
 async function getEmojiImage(emoji) {
   if (emojiImageCache.has(emoji)) return emojiImageCache.get(emoji)
-  const map = await loadAppleEmojiMap()
-  const base = emojiToUnicode(emoji)
-  const variants = [
-    base,
-    base.replace(/-fe0f/gi, ''),
-    `${base.replace(/-fe0f/gi, '')}-fe0f`,
-    base.toUpperCase(),
-    base.replace(/-fe0f/gi, '').toUpperCase(),
-    base.replace(/-fe0f/gi, '').toUpperCase() + '-FE0F',
-  ]
-  let b64 = null
-  for (const v of variants) {
-    if (map[v]) { b64 = map[v]; break; }
+  try {
+    const map = await loadAppleEmojiMap()
+    const base = emojiToUnicode(emoji)
+    const variants = [
+      base,
+      base.replace(/-fe0f/gi, ''),
+      `${base.replace(/-fe0f/gi, '')}-fe0f`,
+      base.toUpperCase(),
+      base.replace(/-fe0f/gi, '').toUpperCase(),
+      base.replace(/-fe0f/gi, '').toUpperCase() + '-FE0F',
+    ]
+    let b64 = null
+    for (const v of variants) {
+      if (map[v]) { b64 = map[v]; break; }
+    }
+    if (!b64) return null
+    
+    const buf = Buffer.from(b64, 'base64')
+    
+    // Proteksi ekstra: Pastikan base64 emoji bukan format teks/SVG
+    if (!isValidImageBuffer(buf)) return null;
+
+    const img = await loadImage(buf)
+    emojiImageCache.set(emoji, img)
+    return img
+  } catch (e) {
+    // Jika gagal load salah satu emoji (Invalid SVG), return null agar di-render pakai text biasa
+    return null;
   }
-  if (!b64) return null
-  const buf = Buffer.from(b64, 'base64')
-  const img = await loadImage(buf)
-  emojiImageCache.set(emoji, img)
-  return img
 }
 
 async function drawAppleEmoji(ctx, emoji, x, y, size) {
   const img = await getEmojiImage(emoji)
   if (!img) {
+    // Kembalikan ke teks emoji bawaan sistem jika aset gambar bermasalah
     ctx.fillText(emoji, x, y)
     return
   }
@@ -170,19 +179,18 @@ export default async function handler(req, res) {
       })
     }
 
-    // Validasi buffer agar tidak meloloskan file SVG/HTML yang bikin canvas error
     if (!isValidImageBuffer(ppBuffer)) {
       return res.status(400).json({
         status: false,
         creator: "Vanz API",
-        message: "URL Foto Profil (ppurl) yang kamu masukkan mengembalikan format SVG atau bukan gambar valid (PNG/JPG)."
+        message: "URL Foto Profil (ppurl) yang kamu masukkan bukan gambar valid (PNG/JPG)."
       })
     }
     if (!isValidImageBuffer(bgBuffer) || !isValidImageBuffer(waIconBuffer)) {
       return res.status(500).json({
         status: false,
         creator: "Vanz API",
-        message: "Aset background atau icon WA di server mendeteksi format SVG/rusak."
+        message: "Aset background atau icon WA mengalami kerusakan berkas."
       })
     }
 
