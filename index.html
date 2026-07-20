@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VANZ API - Layanan API Gratis untuk Developer</title>
+    <title>VANZ API - Developer Platform</title>
     <!-- Menghubungkan ke folder CSS -->
     <link rel="stylesheet" href="Css/style.css">
-    <!-- Tambahkan Google Fonts untuk font yang sama persis -->
+    <!-- Google Fonts Space Grotesk -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Tambahkan perpustakaan ikon untuk ikon buku -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Font Awesome untuk Ikon Kategori -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
@@ -19,12 +19,10 @@
     <header>
         <nav class="navbar">
             <div class="logo-group">
-                <!-- Titik ungu kecil di sebelah logo seperti di referensi -->
-                <span class="purple-dot"></span>
+                <span class="white-dot"></span>
                 <div class="logo">VANZ API</div>
             </div>
             <ul class="nav-links">
-                <!-- Ganti menu lama menjadi Tab SPA -->
                 <li><a class="nav-link active" data-target="home">Home</a></li>
                 <li><a class="nav-link" data-target="documentation">Documentation</a></li>
                 <li><a class="nav-link" data-target="endpoints">Endpoints</a></li>
@@ -38,29 +36,23 @@
     <!-- Main Content Area with Grid Background -->
     <main class="grid-background">
         
-        <!-- 1. HOME SECTION - Landpage Utama (Seperti gambar 1000683440.jpg) -->
+        <!-- 1. HOME SECTION (Landing Page Utama) -->
         <section id="home" class="tab-content active hero-section">
             <div class="hero-content">
-                <!-- Label atas -->
                 <div class="badge-container">
                     <span class="lightning-icon">⚡</span>
                     <span class="badge-text">BUILT FOR DEVELOPERS</span>
                 </div>
 
-                <!-- Judul Utama (Diubah menjadi VANZ API) -->
                 <h1 class="hero-title">VANZ API</h1>
-
-                <!-- Subjudul -->
                 <p class="hero-subtitle">FREE REST API</p>
 
-                <!-- Deskripsi -->
                 <p class="hero-description">
                     Layanan API gratis dan andal yang dirancang untuk pengembangan aplikasi modern. 
                     Dibangun dengan Node.js dan TypeScript, menghadirkan performa cepat, 
                     endpoint stabil, dan integrasi mudah.
                 </p>
 
-                <!-- Action Button (Hanya READ DOCS, GitHub dihapus) -->
                 <div class="action-buttons">
                     <button class="btn btn-primary btn-read-docs" onclick="switchTab('documentation')">
                         <i class="fas fa-book-open"></i> READ DOCS
@@ -68,7 +60,6 @@
                     </button>
                 </div>
 
-                <!-- Petunjuk Scroll di bagian bawah -->
                 <div class="scroll-indicator">
                     <span class="scroll-text">SCROLL</span>
                     <span class="scroll-line"></span>
@@ -76,52 +67,78 @@
             </div>
         </section>
 
-        <!-- 2. DOCUMENTATION SECTION -->
+        <!-- 2. DOCUMENTATION SECTION (Tampilan Grid Kategori Sesuai Gambar) -->
         <section id="documentation" class="tab-content">
-            <h2>Dokumentasi Dasar</h2>
-            <p>Pelajari cara mengintegrasikan VANZ API ke dalam projek aplikasi Anda.</p>
-            <div class="card">
+            <div class="docs-header">
+                <h1 class="section-title">ENDPOINTS ACROSS CATEGORIES</h1>
+                <p class="section-subtitle">All free. Just follow the usage rules.</p>
+            </div>
+            
+            <!-- Grid Kategori -->
+            <div class="categories-grid">
+                <!-- Kategori AI -->
+                <div class="category-card" onclick="openCategory('ai')">
+                    <div class="icon-wrapper icon-ai">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI</h3>
+                    <p class="endpoint-count">1 endpoint</p>
+                </div>
+
+                <!-- Kategori Downloader (Contoh Tambahan) -->
+                <div class="category-card" onclick="openCategory('downloader')">
+                    <div class="icon-wrapper icon-download">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>DOWNLOAD</h3>
+                    <p class="endpoint-count">0 endpoints</p>
+                </div>
+
+                <!-- Kategori Tools (Contoh Tambahan) -->
+                <div class="category-card" onclick="openCategory('tools')">
+                    <div class="icon-wrapper icon-tools">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>TOOLS</h3>
+                    <p class="endpoint-count">0 endpoints</p>
+                </div>
+            </div>
+
+            <!-- Base URL info di bawah kategori -->
+            <div class="card" style="margin-top: 3rem;">
                 <h3>Base URL</h3>
                 <p>Semua request harus diarahkan ke URL dasar berikut:</p>
                 <pre><code>https://vanz-api-one.vercel.app</code></pre>
-            </div>
-            <div class="card">
-                <h3>Contoh Response (JSON)</h3>
-                <pre><code>{
-  "status": 200,
-  "creator": "Vanz Dev",
-  "result": {
-    "message": "Halo Dunia! Berhasil terhubung ke VANZ API."
-  }
-}</code></pre>
             </div>
         </section>
 
         <!-- 3. ENDPOINTS SECTION -->
         <section id="endpoints" class="tab-content">
             <h2>Daftar Endpoints</h2>
-            <p>Berikut adalah daftar fitur API yang tersedia dan siap Anda gunakan.</p>
+            <p>Pilih kategori di halaman Dokumentasi untuk menyaring atau lihat semua di bawah ini:</p>
             
-            <!-- Endpoint 1: AI Claude -->
-            <div class="card">
-                <h3>
-                    <span class="endpoint-badge badge-get">GET</span> 
-                    /api/ai/claude
-                </h3>
-                <p>Berinteraksi dengan Artificial Intelligence model Claude untuk menjawab berbagai macam pertanyaan teks secara cerdas dan kontekstual.</p>
-                
-                <div style="margin: 1rem 0;">
-                    <p style="margin-bottom: 0.5rem; color: #f0f6fc;"><strong>Query Parameters:</strong></p>
-                    <ul style="padding-left: 1.5rem; color: #8b949e;">
-                        <li><code>text</code> (Required) : Pertanyaan atau instruksi yang ingin dikirim ke AI.</li>
-                        <li><code>apikey</code> (Optional) : Kunci akses API milik pengguna (jika diperlukan).</li>
-                    </ul>
-                </div>
+            <!-- Group Kategori AI -->
+            <div class="endpoint-group" data-category="ai">
+                <div class="card">
+                    <h3>
+                        <span class="endpoint-badge badge-get">GET</span> 
+                        /api/ai/claude
+                    </h3>
+                    <p>Berinteraksi dengan Artificial Intelligence model Claude untuk menjawab berbagai macam pertanyaan teks secara cerdas.</p>
+                    
+                    <div style="margin: 1rem 0;">
+                        <p style="margin-bottom: 0.5rem; color: #ffffff;"><strong>Query Parameters:</strong></p>
+                        <ul style="padding-left: 1.5rem; color: #a3a3a3;">
+                            <li><code>text</code> (Required) : Pertanyaan atau instruksi yang dikirim ke AI.</li>
+                        </ul>
+                    </div>
 
-                <p><strong>Contoh Request:</strong></p>
-                <pre><code>https://vanz-api-one.vercel.app/api/ai/claude?text=siapa penemu lampu?</code></pre>
+                    <p><strong>Contoh Request:</strong></p>
+                    <pre><code>https://vanz-api-one.vercel.app/api/ai/claude?text=siapa penemu lampu?</code></pre>
+                </div>
             </div>
             
+            <!-- Nanti kalau ada kategori downloader tinggal bungkus pakai div data-category="downloader" -->
         </section>
 
         <!-- 4. STATUS SECTION -->
@@ -138,24 +155,23 @@
         <!-- 5. CHANGELOG SECTION -->
         <section id="changelog" class="tab-content">
             <h2>Catatan Perubahan (Changelog)</h2>
-            <p>Riwayat pembaruan sistem dan fitur terbaru pada VANZ API.</p>
+            <p>Riwayat pembaruan sistem pada VANZ API.</p>
             <div class="card">
                 <h3>Versi 1.0.0 (Terbaru)</h3>
-                <p>• Rilis perdana website VANZ API di Vercel.<br>
-                   • Menambahkan endpoint utama <code>/api/ai/claude</code>.<br>
-                   • Menggunakan domain baru <code>vanz-api-one.vercel.app</code>.</p>
+                <p>• Rilis perdana website VANZ API dengan arsitektur kategori terintegrasi.<br>
+                   • Menambahkan endpoint utama <code>/api/ai/claude</code>.</p>
             </div>
         </section>
 
         <!-- 6. CONTACT SECTION -->
         <section id="contact" class="tab-content">
             <h2>Hubungi Kami</h2>
-            <p>Punya pertanyaan, laporan bug, atau ingin bekerja sama? Silakan hubungi kami.</p>
+            <p>Punya pertanyaan atau laporan bug? Silakan hubungi kami.</p>
             <div class="card">
                 <h3>Kontak Developer</h3>
                 <p>📧 Email: <code>support@vanzdev.xyz</code></p>
                 <p>💬 Telegram: <code>@vanz_dev</code></p>
-                <button class="btn" onclick="location.href='mailto:support@vanzdev.xyz'">Kirim Email</button>
+                <button class="btn btn-primary" style="max-width: 200px; padding: 0.8rem;" onclick="location.href='mailto:support@vanzdev.xyz'">Kirim Email</button>
             </div>
         </section>
 
