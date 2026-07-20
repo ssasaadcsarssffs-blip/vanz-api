@@ -21,6 +21,17 @@ async function getbufer(url) {
   return Buffer.from(res.data)
 }
 
+// Fungsi untuk mengecek apakah buffer benar-benar gambar valid (bukan SVG / HTML / Error text)
+function isValidImageBuffer(buffer) {
+  if (!buffer || buffer.length < 8) return false;
+  // Deteksi format SVG atau teks HTML
+  const headerStr = buffer.toString('utf8', 0, 50).toLowerCase();
+  if (headerStr.includes('<svg') || headerStr.includes('<!doctype') || headerStr.includes('<html')) {
+    return false;
+  }
+  return true;
+}
+
 function drawcircleimg(ctx, img, x, y, size) {
   ctx.save()
   ctx.beginPath()
@@ -124,7 +135,6 @@ async function drawTextWithEmojis(ctx, text, x, y, fontSize, fontString) {
 }
 
 export default async function handler(req, res) {
-  // Set header agar output dipastikan selalu JSON
   res.setHeader('Content-Type', 'application/json')
 
   const { ppurl, username, chat, tanggal, jam } = req.query
@@ -155,8 +165,24 @@ export default async function handler(req, res) {
       return res.status(400).json({
         status: false,
         creator: "Vanz API",
-        message: "Gagal mendownload gambar profil eksternal. Pastikan URL valid.",
+        message: "Gagal mendownload gambar eksternal. Pastikan URL dapat diakses.",
         detail: fetchError.message
+      })
+    }
+
+    // Validasi buffer agar tidak meloloskan file SVG/HTML yang bikin canvas error
+    if (!isValidImageBuffer(ppBuffer)) {
+      return res.status(400).json({
+        status: false,
+        creator: "Vanz API",
+        message: "URL Foto Profil (ppurl) yang kamu masukkan mengembalikan format SVG atau bukan gambar valid (PNG/JPG)."
+      })
+    }
+    if (!isValidImageBuffer(bgBuffer) || !isValidImageBuffer(waIconBuffer)) {
+      return res.status(500).json({
+        status: false,
+        creator: "Vanz API",
+        message: "Aset background atau icon WA di server mendeteksi format SVG/rusak."
       })
     }
 
@@ -211,7 +237,6 @@ export default async function handler(req, res) {
 
     const buffer = canvas.toBuffer('image/png')
 
-    // Pake import dinamis untuk 'form-data' supaya kompatibel dengan serverless Vercel
     const FormDataModule = await import('form-data')
     const FormDataClass = FormDataModule.default || FormDataModule
     const form = new FormDataClass()
