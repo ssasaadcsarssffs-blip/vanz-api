@@ -47,7 +47,7 @@
             <div class="card">
                 <h3>Base URL</h3>
                 <p>Semua request harus diarahkan ke URL dasar berikut:</p>
-                <pre><code>https://api.vanzdev.xyz/v1</code></pre>
+                <pre><code>https://vanz-api.vercel.app</code></pre>
             </div>
             <div class="card">
                 <h3>Contoh Response (JSON)</h3>
@@ -66,17 +66,28 @@
             <h2>Daftar Endpoints</h2>
             <p>Berikut adalah daftar fitur API yang tersedia dan siap Anda gunakan.</p>
             
+            <!-- Endpoint 1: AI Claude -->
             <div class="card">
-                <h3><span class="endpoint-badge badge-get">GET</span> /downloader/tiktok</h3>
-                <p>Mengambil data video Tiktok tanpa watermark lewat URL.</p>
-                <p>Parameter: <code>?url=LINK_TIKTOK</code></p>
-            </div>
+                <h3>
+                    <span class="endpoint-badge badge-get">GET</span> 
+                    /api/ai/claude
+                </h3>
+                <p>Berinteraksi dengan Artificial Intelligence model Claude untuk menjawab berbagai macam pertanyaan teks secara cerdas dan kontekstual.</p>
+                
+                <div style="margin: 1rem 0;">
+                    <p style="margin-bottom: 0.5rem; color: #f0f6fc;"><strong>Query Parameters:</strong></p>
+                    <ul style="padding-left: 1.5rem; color: #8b949e;">
+                        <li><code>text</code> (Required) : Pertanyaan atau instruksi yang ingin dikirim ke AI.</li>
+                        <li><code>apikey</code> (Optional) : Kunci akses API milik pengguna (jika diperlukan).</li>
+                    </ul>
+                </div>
 
-            <div class="card">
-                <h3><span class="endpoint-badge badge-get">GET</span> /tools/ai</h3>
-                <p>Berinteraksi dengan kecerdasan buatan cerdas.</p>
-                <p>Parameter: <code>?query=PERTANYAAN</code></p>
+                <p><strong>Contoh Request:</strong></p>
+                <pre><code>https://vanz-api.vercel.app/api/ai/claude?text=siapa penemu lampu?</code></pre>
             </div>
+            
+            <!-- Kalau nanti mau nambah endpoint baru lagi, tinggal paste di bawah sini ya! -->
+            
         </section>
 
         <!-- 4. STATUS SECTION -->
@@ -95,13 +106,10 @@
             <h2>Catatan Perubahan (Changelog)</h2>
             <p>Riwayat pembaruan sistem dan fitur terbaru pada Vanz Api.</p>
             <div class="card">
-                <h3>Versi 1.2.0 (Terbaru)</h3>
-                <p>• Menambahkan fitur <code>/tools/ai</code>.<br>
-                   • Optimalisasi kecepatan respon database hingga 20% lebih cepat.</p>
-            </div>
-            <div class="card">
-                <h3>Versi 1.0.0</h3>
-                <p>• Rilis perdana website Vanz Api beserta fitur utama downloader.</p>
+                <h3>Versi 1.0.0 (Terbaru)</h3>
+                <p>• Rilis perdana website Vanz Api di Vercel.<br>
+                   • Menambahkan endpoint utama <code>/api/ai/claude</code>.<br>
+                   • Desain sistem menggunakan tema Dark Mode premium.</p>
             </div>
         </section>
 
@@ -124,7 +132,7 @@
         <p>&copy; 2026 Vanz Api. Powered by Vanz Dev. All rights reserved.</p>
     </footer>
 
-    <!-- Connect to Script -->
+    <!-- Menghubungkan ke folder Script -->
     <script src="Script/script.js"></script>
 </body>
 </html>
