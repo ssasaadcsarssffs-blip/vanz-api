@@ -21,10 +21,18 @@ async function getbufer(url) {
   return Buffer.from(res.data)
 }
 
+// Fungsi deteksi diperketat untuk menangkap XML/SVG/HTML yang lolos
 function isValidImageBuffer(buffer) {
   if (!buffer || buffer.length < 8) return false;
-  const headerStr = buffer.toString('utf8', 0, 50).toLowerCase();
-  if (headerStr.includes('<svg') || headerStr.includes('<!doctype') || headerStr.includes('<html')) {
+  const headerStr = buffer.toString('utf8', 0, 100).toLowerCase();
+  
+  // Jika mengandung tanda-tanda dokumen web/vektor, tolak langsung
+  if (
+    headerStr.includes('<svg') || 
+    headerStr.includes('<?xml') || 
+    headerStr.includes('<!doctype') || 
+    headerStr.includes('<html')
+  ) {
     return false;
   }
   return true;
@@ -99,15 +107,12 @@ async function getEmojiImage(emoji) {
     if (!b64) return null
     
     const buf = Buffer.from(b64, 'base64')
-    
-    // Proteksi ekstra: Pastikan base64 emoji bukan format teks/SVG
     if (!isValidImageBuffer(buf)) return null;
 
     const img = await loadImage(buf)
     emojiImageCache.set(emoji, img)
     return img
   } catch (e) {
-    // Jika gagal load salah satu emoji (Invalid SVG), return null agar di-render pakai text biasa
     return null;
   }
 }
@@ -115,7 +120,6 @@ async function getEmojiImage(emoji) {
 async function drawAppleEmoji(ctx, emoji, x, y, size) {
   const img = await getEmojiImage(emoji)
   if (!img) {
-    // Kembalikan ke teks emoji bawaan sistem jika aset gambar bermasalah
     ctx.fillText(emoji, x, y)
     return
   }
@@ -174,29 +178,31 @@ export default async function handler(req, res) {
       return res.status(400).json({
         status: false,
         creator: "Vanz API",
-        message: "Gagal mendownload gambar eksternal. Pastikan URL dapat diakses.",
+        message: "Gagal mendownload salah satu gambar dari URL.",
         detail: fetchError.message
       })
     }
 
-    if (!isValidImageBuffer(ppBuffer)) {
-      return res.status(400).json({
-        status: false,
-        creator: "Vanz API",
-        message: "URL Foto Profil (ppurl) yang kamu masukkan bukan gambar valid (PNG/JPG)."
-      })
-    }
-    if (!isValidImageBuffer(bgBuffer) || !isValidImageBuffer(waIconBuffer)) {
-      return res.status(500).json({
-        status: false,
-        creator: "Vanz API",
-        message: "Aset background atau icon WA mengalami kerusakan berkas."
-      })
+    // Tracker Pelacakan Error dari Kamu (Sangat berguna untuk Debugging)
+    let bg, ppImg, waImg
+
+    try {
+      bg = await loadImage(bgBuffer)
+    } catch (e) {
+      return res.status(400).json({ status: false, creator: "Vanz API", message: "Error pada Background", detail: e.message })
     }
 
-    const bg = await loadImage(bgBuffer)
-    const ppImg = await loadImage(ppBuffer)
-    const waImg = await loadImage(waIconBuffer)
+    try {
+      ppImg = await loadImage(ppBuffer)
+    } catch (e) {
+      return res.status(400).json({ status: false, creator: "Vanz API", message: "Error pada Foto Profil (ppurl)", detail: e.message })
+    }
+
+    try {
+      waImg = await loadImage(waIconBuffer)
+    } catch (e) {
+      return res.status(400).json({ status: false, creator: "Vanz API", message: "Error pada Icon WhatsApp", detail: e.message })
+    }
 
     const canvas = createCanvas(bg.width, bg.height)
     const ctx = canvas.getContext('2d')
