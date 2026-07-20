@@ -1,82 +1,128 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const apiCards = document.querySelectorAll(".api-card");
+const navLinks = document.querySelectorAll('.nav-link');
+const tabContents = document.querySelectorAll('.tab-content');
 
-    apiCards.forEach(card => {
-        const testButton = card.querySelector(".btn-test");
-        
-        if (testButton) {
-            testButton.addEventListener("click", async () => {
-                await executeApiTest(card);
-            });
-        }
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetTab = link.getAttribute('data-target');
+        switchTab(targetTab);
     });
 });
 
-async function executeApiTest(cardElement) {
-    const basePath = cardElement.getAttribute("data-base-path");
-    const responseType = cardElement.getAttribute("data-response-type");
-    const responseContainer = cardElement.querySelector(".response-result");
-    const testButton = cardElement.querySelector(".btn-test");
+function switchTab(tabId) {
+    navLinks.forEach(l => l.classList.remove('active'));
+    tabContents.forEach(c => c.classList.remove('active'));
 
-    responseContainer.innerHTML = `
-        <div class="flex flex-col items-center gap-2 text-gray-400">
-            <svg class="animate-spin h-5 w-5 text-teal-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span>Memproses aset gambar & canvas...</span>
-        </div>
-    `;
-    testButton.disabled = true;
-    testButton.style.opacity = "0.6";
+    const activeLink = document.querySelector(`.nav-link[data-target="${tabId}"]`);
+    if (activeLink) activeLink.classList.add('active');
 
-    const inputs = cardElement.querySelectorAll("input");
-    const params = new URLSearchParams();
+    const activeContent = document.getElementById(tabId);
+    if (activeContent) activeContent.classList.add('active');
+}
 
-    inputs.forEach(input => {
-        if (input.name && input.value.trim() !== "") {
-            params.append(input.name, input.value.trim());
+function openCategory(catId) {
+    switchTab('endpoints');
+    const groups = document.querySelectorAll('.endpoint-group');
+    groups.forEach(g => {
+        if (g.getAttribute('data-category') === catId) {
+            g.style.display = 'block';
+        } else {
+            g.style.display = 'none';
         }
     });
+}
 
-    let finalUrl = `${basePath}?${params.toString()}`;
+function clearResult(btn) {
+    const resultBox = btn.closest('.api-result-box');
+    const jsonOutput = resultBox.querySelector('.json-output');
+    const imgContainer = resultBox.querySelector('.image-output-container');
+    const imgOutput = resultBox.querySelector('.image-output');
+
+    jsonOutput.textContent = '';
+    imgOutput.src = '';
+    imgContainer.style.display = 'none';
+    resultBox.style.display = 'none';
+}
+
+function copyUrlFromBox(btn) {
+    const previewBox = btn.closest('.api-url-preview-box');
+    const urlText = previewBox.querySelector('.url-text-display').textContent;
+    navigator.clipboard.writeText(urlText).then(() => {
+        const icon = btn.querySelector('i');
+        icon.className = 'fas fa-check';
+        setTimeout(() => { icon.className = 'far fa-copy'; }, 2000);
+    });
+}
+
+function updateUrlPreview(card) {
+    const basePath = card.getAttribute('data-base-path');
+    const type = card.getAttribute('data-type');
+    const previewText = card.querySelector('.url-text-display');
+    const host = "https://vanz-api-one.vercel.app";
+    let url = host + basePath;
+
+    if (type === 'single') {
+        const paramName = card.getAttribute('data-param-name');
+        const inputEl = card.querySelector('.api-test-input');
+        if (inputEl) {
+            url += `?${paramName}=${encodeURIComponent(inputEl.value)}`;
+        }
+    } else if (type === 'multi') {
+        const inputs = card.querySelectorAll('.multi-param');
+        let parts = [];
+        inputs.forEach(inp => {
+            parts.push(`${inp.getAttribute('data-param')}=${encodeURIComponent(inp.value)}`);
+        });
+        if (parts.length > 0) url += '?' + parts.join('&');
+    }
+
+    if (previewText) {
+        previewText.textContent = url;
+    }
+    return url;
+}
+
+document.querySelectorAll('.api-test-input').forEach(input => {
+    input.addEventListener('input', () => {
+        const card = input.closest('.api-card');
+        updateUrlPreview(card);
+    });
+});
+
+async function testRequest(element) {
+    const card = element.closest('.api-card');
+    const resultBox = card.querySelector('.api-result-box');
+    const jsonOutput = card.querySelector('.json-output');
+    const imgContainer = card.querySelector('.image-output-container');
+    const imgOutput = card.querySelector('.image-output');
+    const responseType = card.getAttribute('data-response-type');
+
+    let reqUrl = updateUrlPreview(card);
+
+    resultBox.style.display = 'block';
+    jsonOutput.textContent = 'Loading...';
+    imgContainer.style.display = 'none';
 
     try {
-        if (responseType === "image") {
-            finalUrl += "&response=json";
-
-            const response = await fetch(finalUrl);
-            const data = await response.json();
+        if (responseType === 'image') {
+            reqUrl += (reqUrl.includes('?') ? '&' : '?') + 'response=json';
+            
+            const res = await fetch(reqUrl);
+            const data = await res.json();
 
             if (data.status && data.result) {
-                responseContainer.innerHTML = `
-                    <div class="w-full flex flex-col items-center gap-3 py-2">
-                        <img src="${data.result}" alt="Hasil Canvas API" 
-                             class="rounded-lg shadow-2xl border border-gray-800 max-w-full h-auto transition duration-300 hover:scale-[1.02]" 
-                             style="max-height: 290px;" />
-                        <a href="${data.result}" target="_blank" class="text-[11px] text-teal-400 hover:underline flex items-center gap-1">
-                            Buka gambar penuh di tab baru ↗
-                        </a>
-                    </div>
-                `;
+                jsonOutput.textContent = JSON.stringify({ status: data.status, creator: data.creator }, null, 2);
+                imgOutput.src = data.result;
+                imgContainer.style.display = 'block';
             } else {
-                responseContainer.innerHTML = `<pre class="text-red-400 w-full">${JSON.stringify(data, null, 2)}</pre>`;
+                jsonOutput.textContent = JSON.stringify(data, null, 2);
             }
         } else {
-            const response = await fetch(finalUrl);
-            const data = await response.json();
-            responseContainer.innerHTML = `<pre class="text-green-400 w-full">${JSON.stringify(data, null, 2)}</pre>`;
+            const res = await fetch(reqUrl);
+            const data = await res.json();
+            jsonOutput.textContent = JSON.stringify(data, null, 2);
         }
-
-    } catch (error) {
-        responseContainer.innerHTML = `
-            <div class="text-red-500 font-bold p-2">
-                [CLIENT FETCH ERROR]<br>
-                <span class="text-xs font-normal text-gray-400">${error.message}</span>
-            </div>
-        `;
-    } finally {
-        testButton.disabled = false;
-        testButton.style.opacity = "1";
+    } catch (err) {
+        jsonOutput.textContent = JSON.stringify({ error: "Failed to fetch data", message: err.message }, null, 2);
     }
 }
