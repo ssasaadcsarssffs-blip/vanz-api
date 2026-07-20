@@ -141,29 +141,32 @@
                                 <button class="btn-clear-result" onclick="clearResult(this)">Clear</button>
                             </div>
                             <pre><code class="json-output"></code></pre>
+                            <div class="image-output-container" style="display: none; padding: 1rem; text-align: center; background: #0a0a0a;">
+                                <img class="image-output" src="" alt="API Result" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="endpoint-group" data-category="maker" style="display: none;">
-                <div class="card api-card" data-base-path="/api/maker/textpro" data-param-name="text">
+                <div class="card api-card" data-base-path="/api/maker/brat" data-param-name="text" data-response-type="image">
                     <div class="api-card-header">
                         <span class="endpoint-badge badge-get">GET</span> 
-                        <span class="api-path">/api/maker/textpro</span>
+                        <span class="api-path">/api/maker/brat</span>
                     </div>
-                    <p class="api-desc">Membuat logo atau grafik kustom berbasis TextPro menggunakan parameter input teks.</p>
+                    <p class="api-desc">Membuat gambar bergaya Brat kustom menggunakan parameter input teks.</p>
                     
                     <div class="api-test-container">
                         <div class="api-input-group">
-                            <input type="text" class="api-test-input" placeholder="Masukkan teks logo di sini..." value="VanzDev">
+                            <input type="text" class="api-test-input" placeholder="Masukkan teks di sini..." value="VanzDev">
                             <button class="btn-api-send" onclick="testRequest(this)" title="Test Request">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>
                         
                         <div class="api-url-preview-box">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/maker/textpro?text=VanzDev</span>
+                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/maker/brat?text=VanzDev</span>
                             <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
                                 <i class="far fa-copy"></i>
                             </button>
@@ -175,6 +178,9 @@
                                 <button class="btn-clear-result" onclick="clearResult(this)">Clear</button>
                             </div>
                             <pre><code class="json-output"></code></pre>
+                            <div class="image-output-container" style="display: none; padding: 1rem; text-align: center; background: #0a0a0a;">
+                                <img class="image-output" src="" alt="API Result" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                            </div>
                         </div>
                     </div>
                 </div>
