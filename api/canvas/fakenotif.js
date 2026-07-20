@@ -2,7 +2,6 @@ import { createCanvas, loadImage, GlobalFonts } from '@napi-rs/canvas'
 import fs from 'fs'
 import path from 'path'
 import axios from 'axios'
-import FormData from 'form-data' // Pastikan sudah install package ini di package.json backend kamu
 
 const APPLE_EMOJI_JSON_URL = 'https://media.githubusercontent.com/media/Ditzzx-vibecoder/entahlah/main/emoji-apple.json'
 let appleEmojiMap = null
@@ -10,6 +9,7 @@ const emojiImageCache = new Map()
 const EMOJI_REGEX = /(\p{Emoji_Modifier_Base}\p{Emoji_Modifier}|\p{Emoji_Presentation}\uFE0F?|\p{Emoji}\uFE0F|[\u{1F1E0}-\u{1F1FF}]{2}|\p{Extended_Pictographic}\uFE0F?)/gu
 
 const TMP_DIR = '/tmp'
+let isAssetLoaded = false; // Flag untuk mencegah download berulang
 
 async function getbufer(url) {
   const res = await axios.get(url, { 
@@ -32,6 +32,8 @@ function drawcircleimg(ctx, img, x, y, size) {
 }
 
 async function loadAssets() {
+  if (isAssetLoaded) return; // Jika sudah terdaftar di memory global, lewati proses ini
+  
   const fonts = [
     { url: 'https://uploader.zenzxz.dpdns.org/uploads/1783935033044.ttf', name: 'RobotoBold', path: path.join(TMP_DIR, 'RobotoBold.ttf') },
     { url: 'https://uploader.zenzxz.dpdns.org/uploads/1783935096347.ttf', name: 'RobotoRegular', path: path.join(TMP_DIR, 'RobotoRegular.ttf') },
@@ -43,8 +45,13 @@ async function loadAssets() {
       const buf = await getbufer(font.url)
       fs.writeFileSync(font.path, buf)
     }
-    GlobalFonts.registerFromPath(font.path, font.name)
+    try {
+      GlobalFonts.registerFromPath(font.path, font.name)
+    } catch (e) {
+      console.log(`Font ${font.name} mungkin sudah terdaftar.`);
+    }
   }
+  isAssetLoaded = true;
 }
 
 function emojiToUnicode(emoji) {
@@ -128,6 +135,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    // 1. Load Aset secara efisien
     await loadAssets()
 
     const baground = 'https://uploader.zenzxz.dpdns.org/uploads/1783938224798.png'
@@ -135,6 +143,7 @@ export default async function handler(req, res) {
 
     let bgBuffer, ppBuffer, waIconBuffer
     
+    // 2. Ambil gambar eksternal dengan proteksi error
     try {
       [bgBuffer, ppBuffer, waIconBuffer] = await Promise.all([
         getbufer(baground),
@@ -145,7 +154,7 @@ export default async function handler(req, res) {
       return res.status(400).json({
         status: false,
         creator: "Vanz API",
-        message: "Gagal mengambil asset gambar eksternal. Pastikan URL Foto Profil valid.",
+        message: "Gagal mengambil gambar. Kemungkinan URL foto profil diblokir/tidak valid.",
         detail: fetchError.message
       })
     }
@@ -201,13 +210,13 @@ export default async function handler(req, res) {
 
     const buffer = canvas.toBuffer('image/png')
 
-    // --- ALUR PROSES UPLOAD KE CLOUD YARDAN ---
-    const form = new FormData()
-    form.append('file', buffer, { filename: 'fakenotif.png', contentType: 'image/png' })
+    // 3. Konversi buffer menggunakan FormData bawaan global (Lebih aman untuk Vercel Serverless)
+    const formData = new FormData()
+    const blob = new Blob([buffer], { type: 'image/png' })
+    formData.append('file', blob, 'fakenotif.png')
 
-    const uploadResponse = await axios.post('https://cloud.yardansh.com/upload', form, {
+    const uploadResponse = await axios.post('https://cloud.yardansh.com/upload', formData, {
       headers: {
-        ...form.getHeaders(),
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
       }
     })
@@ -215,21 +224,15 @@ export default async function handler(req, res) {
     const uploadData = uploadResponse.data
     let resultUrl = ""
 
-    if (uploadData && uploadData.url) {
-        resultUrl = uploadData.url;
-    } else if (uploadData && uploadData.file && uploadData.file.url) {
-        resultUrl = uploadData.file.url;
-    } else if (uploadData && uploadData.result) {
-        resultUrl = uploadData.result;
-    } else if (typeof uploadData === "string") {
-        resultUrl = uploadData;
-    }
+    if (uploadData && uploadData.url) resultUrl = uploadData.url
+    else if (uploadData && uploadData.file && uploadData.file.url) resultUrl = uploadData.file.url
+    else if (uploadData && uploadData.result) resultUrl = uploadData.result
+    else if (typeof uploadData === "string") resultUrl = uploadData
 
     if (!resultUrl) {
-      throw new Error("Gagal memperoleh URL gambar dari Cloud Yardan.")
+      throw new Error("Gagal memperoleh URL gambar balikan dari Cloud Yardan.")
     }
 
-    // Kembalikan data dalam bentuk JSON
     res.status(200).json({
       status: true,
       creator: "Vanz API",
@@ -240,7 +243,8 @@ export default async function handler(req, res) {
     res.status(500).json({
       status: false,
       creator: "Vanz API",
-      message: err.message
+      message: "Server mengalami kendala internal (Vercel Serverless Limit)",
+      detail: err.message
     })
   }
 }
