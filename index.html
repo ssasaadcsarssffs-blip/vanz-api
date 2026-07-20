@@ -76,6 +76,14 @@
                     <p class="endpoint-count">1 endpoint</p>
                 </div>
 
+                <div class="category-card" onclick="openCategory('canvas')">
+                    <div class="icon-wrapper" style="background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2);">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3>CANVAS</h3>
+                    <p class="endpoint-count">1 endpoint</p>
+                </div>
+
                 <div class="category-card" onclick="openCategory('maker')">
                     <div class="icon-wrapper icon-tools" style="background-color: rgba(236, 72, 153, 0.1); color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.2);">
                         <i class="fas fa-palette"></i>
@@ -113,7 +121,7 @@
             <p style="margin-bottom: 2rem;">Silakan tes request secara live pada masing-masing endpoint di bawah ini.</p>
             
             <div class="endpoint-group" data-category="ai">
-                <div class="card api-card" data-base-path="/api/ai/vanz-ai" data-param-name="prompt">
+                <div class="card api-card" data-base-path="/api/ai/vanz-ai" data-type="single" data-param-name="prompt">
                     <div class="api-card-header">
                         <span class="endpoint-badge badge-get">GET</span> 
                         <span class="api-path">/api/ai/vanz-ai</span>
@@ -149,8 +157,86 @@
                 </div>
             </div>
 
+            <div class="endpoint-group" data-category="canvas" style="display: none;">
+                <div class="card api-card" data-base-path="/api/canvas/fakenotif" data-type="multi" data-response-type="image">
+                    <div class="api-card-header">
+                        <span class="endpoint-badge badge-get">GET</span> 
+                        <span class="api-path">/api/canvas/fakenotif</span>
+                    </div>
+                    <p class="api-desc">Membuat gambar notifikasi tiruan bergaya iOS Lockscreen berdasarkan parameter teks dan foto profil custom.</p>
+                    
+                    <div class="api-test-container">
+                        <div class="api-multi-inputs" style="display: flex; flex-direction: column; gap: 0.8rem; width: 100%;">
+                            <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                                <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Foto Profil (Upload File / Masukkan URL)</label>
+                                <div style="display: flex; gap: 0.5rem; width: 100%;">
+                                    <input type="file" class="api-file-input" accept="image/*" style="display: none;" id="canvas-pp-file" onchange="handleFileUpload(this)">
+                                    <button type="button" class="btn" style="max-width: 130px; padding: 0.6rem; font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.1); background: #171717; color:#fff;" onclick="document.getElementById('canvas-pp-file').click()">
+                                        <i class="fas fa-upload"></i> Upload
+                                    </button>
+                                    <div class="api-input-group" style="flex: 1;">
+                                        <input type="text" class="api-test-input multi-param" data-param="ppurl" placeholder="URL Foto Profil..." value="https://i.ibb.co.com/844v6q1/avatar.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 0.8rem;">
+                                <div style="flex: 1; display: flex; flex-direction: column; gap: 0.3rem;">
+                                    <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Username Pengirim</label>
+                                    <div class="api-input-group">
+                                        <input type="text" class="api-test-input multi-param" data-param="username" placeholder="Nama..." value="ZennzXD">
+                                    </div>
+                                </div>
+                                <div style="flex: 1; display: flex; flex-direction: column; gap: 0.3rem;">
+                                    <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Isi Pesan</label>
+                                    <div class="api-input-group">
+                                        <input type="text" class="api-test-input multi-param" data-param="chat" placeholder="Pesan..." value="Haii sayangg udah makan belumm? 🥺">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 0.8rem;">
+                                <div style="flex: 1; display: flex; flex-direction: column; gap: 0.3rem;">
+                                    <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Tanggal</label>
+                                    <div class="api-input-group">
+                                        <input type="text" class="api-test-input multi-param" data-param="tanggal" placeholder="Hari, Tgl..." value="Senin, 6 Maret">
+                                    </div>
+                                </div>
+                                <div style="flex: 1; display: flex; flex-direction: column; gap: 0.3rem;">
+                                    <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Jam</label>
+                                    <div class="api-input-group">
+                                        <input type="text" class="api-test-input multi-param" data-param="jam" placeholder="Waktu..." value="18.30">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="align-self: flex-end; width: 100%; margin-top: 0.4rem;">
+                                <button class="btn btn-primary" style="padding: 0.8rem; font-size: 1rem; width: 100%; max-width: none;" onclick="testRequest(this)">
+                                    <i class="fas fa-paper-plane"></i> TEST REQUEST
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="api-url-preview-box" style="margin-top: 0.5rem;">
+                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/canvas/fakenotif?ppurl=https://i.ibb.co.com/844v6q1/avatar.jpg&username=ZennzXD&chat=Haii%20sayangg%20udah%20makan%20belumm%3F%20%F0%9F%A5%BA&tanggal=Senin,%206%20Maret&jam=18.30</span>
+                            <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+
+                        <div class="api-result-box" style="display: none;">
+                            <div class="api-result-header">
+                                <span>Response Result</span>
+                                <button class="btn-clear-result" onclick="clearResult(this)">Clear</button>
+                            </div>
+                            <pre><code class="json-output"></code></pre>
+                            <div class="image-output-container" style="display: none; padding: 1rem; text-align: center; background: #0a0a0a;">
+                                <img class="image-output" src="" alt="API Result" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="endpoint-group" data-category="maker" style="display: none;">
-                <div class="card api-card" data-base-path="/api/maker/brat" data-param-name="text" data-response-type="image">
+                <div class="card api-card" data-base-path="/api/maker/brat" data-type="single" data-param-name="text" data-response-type="image">
                     <div class="api-card-header">
                         <span class="endpoint-badge badge-get">GET</span> 
                         <span class="api-path">/api/maker/brat</span>
