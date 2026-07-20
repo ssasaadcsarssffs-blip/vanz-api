@@ -76,6 +76,14 @@
                     <p class="endpoint-count">1 endpoint</p>
                 </div>
 
+                <div class="category-card" onclick="openCategory('maker')">
+                    <div class="icon-wrapper icon-tools" style="background-color: rgba(236, 72, 153, 0.1); color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.2);">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>MAKER</h3>
+                    <p class="endpoint-count">1 endpoint</p>
+                </div>
+
                 <div class="category-card" onclick="openCategory('downloader')">
                     <div class="icon-wrapper icon-download">
                         <i class="fas fa-download"></i>
@@ -105,7 +113,6 @@
             <p style="margin-bottom: 2rem;">Silakan tes request secara live pada masing-masing endpoint di bawah ini.</p>
             
             <div class="endpoint-group" data-category="ai">
-                
                 <div class="card api-card" data-base-path="/api/ai/vanz-ai" data-param-name="prompt">
                     <div class="api-card-header">
                         <span class="endpoint-badge badge-get">GET</span> 
@@ -137,7 +144,40 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="endpoint-group" data-category="maker" style="display: none;">
+                <div class="card api-card" data-base-path="/api/maker/textpro" data-param-name="text">
+                    <div class="api-card-header">
+                        <span class="endpoint-badge badge-get">GET</span> 
+                        <span class="api-path">/api/maker/textpro</span>
+                    </div>
+                    <p class="api-desc">Membuat logo atau grafik kustom berbasis TextPro menggunakan parameter input teks.</p>
+                    
+                    <div class="api-test-container">
+                        <div class="api-input-group">
+                            <input type="text" class="api-test-input" placeholder="Masukkan teks logo di sini..." value="VanzDev">
+                            <button class="btn-api-send" onclick="testRequest(this)" title="Test Request">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="api-url-preview-box">
+                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/maker/textpro?text=VanzDev</span>
+                            <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+
+                        <div class="api-result-box" style="display: none;">
+                            <div class="api-result-header">
+                                <span>Response Result</span>
+                                <button class="btn-clear-result" onclick="clearResult(this)">Clear</button>
+                            </div>
+                            <pre><code class="json-output"></code></pre>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -166,8 +206,8 @@
             <p>Punya pertanyaan atau laporan bug? Silakan hubungi kami.</p>
             <div class="card">
                 <h3>Kontak Developer</h3>
-                <p>📧 Email: <code>support@males</code></p>
-                <p>💬 Telegram: <code>t.me/RenSiSell</code></p>
+                <p>📧 Email: <code>support@vanzdev.xyz</code></p>
+                <p>💬 Telegram: <code>@t.me/RenSiSell</code></p>
                 <button class="btn btn-primary" style="max-width: 200px; padding: 0.8rem;" onclick="location.href='mailto:support@vanzdev.xyz'">Kirim Email</button>
             </div>
         </section>
