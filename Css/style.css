@@ -3,32 +3,31 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* Gunakan font Space Grotesk yang mirip dengan gambar referensi */
     font-family: 'Space Grotesk', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
-    /* Latar belakang ungu gelap pekat */
-    background-color: #0c0018;
-    color: #e2e8f0;
+    /* Latar belakang hitam pekat total */
+    background-color: #000000;
+    color: #e5e5e5;
     line-height: 1.6;
     overflow-x: hidden;
 }
 
-/* Latar belakang Grid yang terlihat di gambar referensi */
+/* Latar belakang Grid tipis warna abu-abu gelap */
 .grid-background {
     position: relative;
     background-image: 
-        linear-gradient(rgba(107, 33, 168, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(107, 33, 168, 0.05) 1px, transparent 1px);
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     background-size: 50px 50px;
     background-position: center;
 }
 
 /* Navigation Bar */
 header {
-    background-color: #07000e;
-    border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+    background-color: #050505;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -52,9 +51,9 @@ header {
 .purple-dot {
     width: 10px;
     height: 10px;
-    background-color: #8b5cf6;
+    background-color: #ffffff;
     border-radius: 50%;
-    box-shadow: 0 0 10px #8b5cf6;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
 
 .logo {
@@ -71,7 +70,7 @@ header {
 }
 
 .nav-links a {
-    color: #94a3b8;
+    color: #737373;
     text-decoration: none;
     font-weight: 500;
     font-size: 0.95rem;
@@ -82,8 +81,8 @@ header {
 }
 
 .nav-links a:hover, .nav-links a.active {
-    color: #c4b5fd;
-    text-shadow: 0 0 8px rgba(196, 181, 253, 0.5);
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
 }
 
 /* Main Content Layout */
@@ -117,10 +116,10 @@ h1, h2, h3 {
 
 p {
     margin-bottom: 1.2rem;
-    color: #94a3b8;
+    color: #a3a3a3;
 }
 
-/* Ganti Gaya Tombol Utama menjadi Ungu Lebar seperti di referensi */
+/* Tombol Utama Hitam Elegan dengan Border Putih/Abu */
 .btn {
     display: flex;
     align-items: center;
@@ -134,20 +133,19 @@ p {
     letter-spacing: 1px;
     text-transform: uppercase;
     transition: all 0.3s ease;
-    border: none;
     cursor: pointer;
     width: 100%;
     max-width: 500px;
 }
 
 .btn-primary {
-    background-color: #8b5cf6;
-    color: #ffffff;
+    background-color: #ffffff;
+    color: #000000;
 }
 
 .btn-primary:hover {
-    background-color: #7c3aed;
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+    background-color: #e5e5e5;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 .btn-primary i {
@@ -160,8 +158,8 @@ p {
 }
 
 .card {
-    background-color: #07000e;
-    border: 1px solid rgba(139, 92, 246, 0.2);
+    background-color: #0a0a0a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     padding: 2rem;
     margin-bottom: 1.5rem;
@@ -169,22 +167,23 @@ p {
 }
 
 .card:hover {
-    border-color: rgba(139, 92, 246, 0.5);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Code & Endpoints Styling */
 code {
-    background-color: #1a012d;
+    background-color: #171717;
     padding: 0.3rem 0.6rem;
     border-radius: 6px;
-    color: #c4b5fd;
+    color: #e5e5e5;
     font-family: monospace;
     font-size: 0.9em;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 pre {
-    background-color: #07000e;
-    border: 1px solid rgba(139, 92, 246, 0.2);
+    background-color: #050505;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 1.5rem;
     border-radius: 8px;
     overflow-x: auto;
@@ -192,13 +191,14 @@ pre {
 }
 
 pre code {
-    color: #e2e8f0;
+    color: #e5e5e5;
     padding: 0;
     background: none;
+    border: none;
 }
 
 .endpoint-badge {
-    color: white;
+    color: black;
     padding: 0.3rem 0.8rem;
     border-radius: 6px;
     font-size: 0.85rem;
@@ -207,22 +207,20 @@ pre code {
     letter-spacing: 1px;
 }
 
-.badge-get { background-color: #2ea043; }
+.badge-get { background-color: #ffffff; color: #000000; }
 
 /* Status Indicator */
 .status-online {
     display: inline-block;
     width: 12px;
     height: 12px;
-    background-color: #3fb950;
+    background-color: #22c55e;
     border-radius: 50%;
     margin-right: 0.5rem;
-    box-shadow: 0 0 10px #3fb950;
+    box-shadow: 0 0 10px #22c55e;
 }
 
-/* 
-   Hero Section Styling - Menirukan persis gambar 1000683440.jpg 
-*/
+/* Hero Section Styling */
 .hero-section {
     display: flex;
     justify-content: center;
@@ -242,20 +240,20 @@ pre code {
     display: flex;
     align-items: center;
     gap: 10px;
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    background-color: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.03);
     padding: 0.6rem 1.5rem;
     border-radius: 50px;
     margin-bottom: 2rem;
 }
 
 .lightning-icon {
-    color: #c4b5fd;
+    color: #ffffff;
     font-size: 1rem;
 }
 
 .badge-text {
-    color: #c4b5fd;
+    color: #d4d4d4;
     font-weight: 500;
     font-size: 0.8rem;
     letter-spacing: 1.5px;
@@ -273,7 +271,7 @@ pre code {
 .hero-subtitle {
     font-size: 1.5rem;
     font-weight: 500;
-    color: #c4b5fd;
+    color: #a3a3a3;
     margin-bottom: 3rem;
     letter-spacing: 3px;
     text-transform: uppercase;
@@ -281,7 +279,7 @@ pre code {
 
 .hero-description {
     font-size: 1.1rem;
-    color: #94a3b8;
+    color: #737373;
     max-width: 600px;
     margin-bottom: 4rem;
     line-height: 1.8;
@@ -299,19 +297,19 @@ pre code {
     flex-direction: column;
     align-items: center;
     gap: 15px;
-    opacity: 0.7;
+    opacity: 0.5;
 }
 
 .scroll-text {
     font-size: 0.8rem;
-    color: #94a3b8;
+    color: #737373;
     letter-spacing: 2px;
 }
 
 .scroll-line {
     width: 2px;
     height: 40px;
-    background-color: #94a3b8;
+    background-color: #737373;
     border-radius: 2px;
 }
 
@@ -320,16 +318,16 @@ footer {
     text-align: center;
     padding: 3rem;
     margin-top: 3rem;
-    border-top: 1px solid rgba(139, 92, 246, 0.2);
-    color: #94a3b8;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: #737373;
     font-size: 0.9rem;
-    background-color: #07000e;
+    background-color: #050505;
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .navbar { padding: 1rem 1.5rem; }
-    .nav-links { display: none; } /* Sembunyikan menu di mobile untuk kesederhanaan */
+    .nav-links { display: none; }
     .hero-title { font-size: 4rem; }
     .hero-subtitle { font-size: 1.2rem; }
     main { padding: 2rem 1.5rem; }
