@@ -9,14 +9,13 @@
 }
 
 body {
-    /* Latar belakang hitam pekat total */
-    background-color: #000000;
+    background-color: #000000; /* Hitam pekat total (true dark mode) */
     color: #e5e5e5;
     line-height: 1.6;
     overflow-x: hidden;
 }
 
-/* Latar belakang Grid tipis warna abu-abu gelap */
+/* Latar belakang Grid tipis estetik */
 .grid-background {
     position: relative;
     background-image: 
@@ -90,7 +89,7 @@ header {
 }
 
 /* ==========================================================================
-   3. LAYOUT & SYSTEM TAB SPA
+   3. LAYOUT & SPA TABS ANIMATION
    ========================================================================== */
 main {
     max-width: 1400px;
@@ -114,7 +113,7 @@ main {
 }
 
 /* ==========================================================================
-   4. HERO SECTION (LANDING PAGE TAMPILAN AWAL)
+   4. HERO SECTION (LANDING PAGE)
    ========================================================================== */
 .hero-section {
     display: flex;
@@ -209,7 +208,7 @@ main {
 }
 
 /* ==========================================================================
-   5. DOCUMENTATION & CATEGORIES GRID
+   5. DOCUMENTATION & CATEGORIES GRID (Sesuai Gambar 1)
    ========================================================================== */
 .docs-header {
     text-align: center;
@@ -271,7 +270,7 @@ main {
     margin-bottom: 0;
 }
 
-/* Pembungkus Ikon Kategori Neon Redup */
+/* Pembungkus Ikon Warna Pastel Redup */
 .icon-wrapper {
     width: 48px;
     height: 48px;
@@ -301,7 +300,7 @@ main {
 }
 
 /* ==========================================================================
-   6. UI COMPONENTS (CARDS, BUTTONS, & CODE)
+   6. CARDS, TYPOGRAPHY, BUTTONS & CODE BLOCK
    ========================================================================== */
 h1, h2, h3 {
     color: #ffffff;
@@ -365,7 +364,7 @@ p {
     border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Code Styles */
+/* Format Penulisan Kode Mentah */
 code {
     background-color: #171717;
     padding: 0.3rem 0.6rem;
@@ -407,7 +406,6 @@ pre code {
     color: #000000; 
 }
 
-/* Status Indicator */
 .status-online {
     display: inline-block;
     width: 12px;
@@ -423,7 +421,131 @@ pre code {
 }
 
 /* ==========================================================================
-   7. FOOTER & RESPONSIVENESS
+   7. LIVE INTERACTIVE REQUEST BOX (Sesuai Gambar 2)
+   ========================================================================== */
+.api-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.api-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.api-path {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.api-desc {
+    color: #a3a3a3;
+    font-size: 0.95rem;
+}
+
+.api-test-container {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 600px;
+    width: 100%;
+}
+
+/* Container Input Parameter */
+.api-input-group {
+    display: flex;
+    width: 100%;
+    background-color: #171717;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.api-input-group:focus-within {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.api-test-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 0.8rem 1rem;
+    color: #ffffff;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+/* Tombol Eksekusi / Icon Pesawat */
+.btn-api-send {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: none;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    color: #a3a3a3;
+    padding: 0 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-api-send:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Preview Kotak Hasil URL */
+.api-url-preview-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #050505;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    width: 100%;
+}
+
+.url-text-display {
+    font-family: monospace;
+    color: #737373;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow-x: auto;
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.url-text-display::-webkit-scrollbar {
+    height: 3px;
+}
+
+.url-text-display::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.btn-copy-url {
+    background: transparent;
+    border: none;
+    color: #737373;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    font-size: 1rem;
+}
+
+.btn-copy-url:hover {
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   8. FOOTER & MEDIA RESPONSIVE FILTER
    ========================================================================== */
 footer {
     text-align: center;
@@ -440,7 +562,7 @@ footer {
         padding: 1rem 1.5rem; 
     }
     .nav-links { 
-        display: none; /* Menyembunyikan navbar links pada mobile demi kebersihan layout grid */
+        display: none; /* Menyembunyikan menu link bawaan untuk merapikan layout mobile */
     }
     .hero-title { 
         font-size: 4rem; 
