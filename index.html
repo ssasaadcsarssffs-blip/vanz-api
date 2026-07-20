@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VANZ API - Developer Platform</title>
-    <link rel="stylesheet" href="Css/style.css">
+    <link class="nav-link" rel="stylesheet" href="Css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
@@ -168,15 +168,9 @@
                     <div class="api-test-container">
                         <div class="api-multi-inputs" style="display: flex; flex-direction: column; gap: 0.8rem; width: 100%;">
                             <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Foto Profil (Upload File / Masukkan URL)</label>
-                                <div style="display: flex; gap: 0.5rem; width: 100%;">
-                                    <input type="file" class="api-file-input" accept="image/*" style="display: none;" id="canvas-pp-file" onchange="handleFileUpload(this)">
-                                    <button type="button" class="btn" style="max-width: 130px; padding: 0.6rem; font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.1); background: #171717; color:#fff;" onclick="document.getElementById('canvas-pp-file').click()">
-                                        <i class="fas fa-upload"></i> Upload
-                                    </button>
-                                    <div class="api-input-group" style="flex: 1;">
-                                        <input type="text" class="api-test-input multi-param" data-param="ppurl" placeholder="URL Foto Profil..." value="https://i.ibb.co.com/844v6q1/avatar.jpg">
-                                    </div>
+                                <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Foto Profil (Masukkan URL Gambar)</label>
+                                <div class="api-input-group" style="width: 100%;">
+                                    <input type="text" class="api-test-input multi-param" data-param="ppurl" placeholder="Masukkan URL gambar foto profil (https://...)" value="">
                                 </div>
                             </div>
                             <div style="display: flex; gap: 0.8rem;">
@@ -215,7 +209,7 @@
                         </div>
                         
                         <div class="api-url-preview-box" style="margin-top: 0.5rem;">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/canvas/fakenotif?ppurl=https://i.ibb.co.com/844v6q1/avatar.jpg&username=ZennzXD&chat=Haii%20sayangg%20udah%20makan%20belumm%3F%20%F0%9F%A5%BA&tanggal=Senin,%206%20Maret&jam=18.30</span>
+                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/canvas/fakenotif?ppurl=&username=ZennzXD&chat=Haii%20sayangg%20udah%20makan%20belumm%3F%20%F0%9F%A5%BA&tanggal=Senin,%206%20Maret&jam=18.30</span>
                             <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
                                 <i class="far fa-copy"></i>
                             </button>
