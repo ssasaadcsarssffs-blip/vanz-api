@@ -61,6 +61,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     loadDashboardData();
+
+    let isScrolling = false;
+
+    window.addEventListener('wheel', (e) => {
+        const activeTab = document.querySelector('.tab-content.active');
+        if (activeTab && activeTab.id === 'home' && e.deltaY > 0 && !isScrolling) {
+            isScrolling = true;
+            switchTab('documentation');
+            setTimeout(() => {
+                isScrolling = false;
+            }, 800);
+        }
+    });
+
+    let touchStartY = 0;
+    window.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+        const activeTab = document.querySelector('.tab-content.active');
+        const touchEndY = e.changedTouches[0].clientY;
+        if (activeTab && activeTab.id === 'home' && (touchStartY - touchEndY > 50) && !isScrolling) {
+            isScrolling = true;
+            switchTab('documentation');
+            setTimeout(() => {
+                isScrolling = false;
+            }, 800);
+        }
+    }, { passive: true });
 });
 
 function updateUrlPreview(card) {
@@ -261,4 +291,3 @@ function fetchUserBattery() {
         batteryStatusElem.textContent = 'Browser tidak mendukung Battery API';
     }
 }
-
