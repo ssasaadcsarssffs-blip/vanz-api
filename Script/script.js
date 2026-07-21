@@ -19,6 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        if (targetId === 'dashboard') {
+            loadDashboardData();
+        }
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -55,6 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         updateUrlPreview(card);
     });
+
+    loadDashboardData();
 });
 
 function updateUrlPreview(card) {
@@ -92,7 +98,15 @@ function updateUrlPreview(card) {
     return finalUrl;
 }
 
+function incrementRequestCount() {
+    let currentReqs = parseInt(localStorage.getItem('vanz_total_requests') || '0', 10);
+    currentReqs += 1;
+    localStorage.setItem('vanz_total_requests', currentReqs.toString());
+}
+
 async function testRequest(element) {
+    incrementRequestCount();
+
     const card = element.closest('.api-card');
     const resultBox = card.querySelector('.api-result-box');
     const jsonOutput = card.querySelector('.json-output');
@@ -183,4 +197,54 @@ function clearResult(btn) {
     if (imgOutput) imgOutput.src = '';
     if (imgContainer) imgContainer.style.display = 'none';
     resultBox.style.display = 'none';
+}
+
+function loadDashboardData() {
+    const totalReq = localStorage.getItem('vanz_total_requests') || '0';
+    const totalReqElem = document.getElementById('dash-total-req');
+    if (totalReqElem) totalReqElem.textContent = totalReq;
+
+    const cards = document.querySelectorAll('.api-card');
+    const totalEndpointsElem = document.getElementById('dash-total-endpoints');
+    if (totalEndpointsElem) totalEndpointsElem.textContent = cards.length;
+
+    fetchUserIp();
+
+    fetchUserBattery();
+}
+
+async function fetchUserIp() {
+    const ipElem = document.getElementById('dash-ip');
+    if (!ipElem) return;
+
+    try {
+        const res = await fetch('https://api.ipify.org?format=json');
+        const data = await res.json();
+        ipElem.textContent = data.ip;
+    } catch {
+        ipElem.textContent = 'Gagal memuat';
+    }
+}
+
+function fetchUserBattery() {
+    const batteryElem = document.getElementById('dash-battery');
+    const batteryStatusElem = document.getElementById('dash-battery-status');
+    if (!batteryElem) return;
+
+    if ('getBattery' in navigator) {
+        navigator.getBattery().then(battery => {
+            function updateBatteryInfo() {
+                const level = Math.round(battery.level * 100);
+                batteryElem.textContent = `${level}%`;
+                batteryStatusElem.textContent = battery.charging ? 'Sedang Diisi (Charging ⚡)' : 'Tidak Diisi (Discharging)';
+            }
+            updateBatteryInfo();
+
+            battery.addEventListener('levelchange', updateBatteryInfo);
+            battery.addEventListener('chargingchange', updateBatteryInfo);
+        });
+    } else {
+        batteryElem.textContent = 'N/A';
+        batteryStatusElem.textContent = 'Browser tidak mendukung Battery API';
+    }
 }
