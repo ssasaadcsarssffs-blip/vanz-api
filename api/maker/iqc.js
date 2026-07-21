@@ -1,39 +1,34 @@
 export default async function handler(req, res) {
-  const {
-    text,
-    chattime,
-    statusbartime,
-    bubblecolor,
-    menucolor,
-    textcolor,
-    fontname,
-    signalname
-  } = req.query
+  const { text } = req.query
 
-  if (!text || !chattime || !statusbartime || !fontname || !signalname) {
+  if (!text) {
     return res.status(400).json({
       status: false,
       creator: "Vanz API",
-      message: "Parameter wajib: text, chattime, statusbartime, fontname, signalname"
+      message: "Parameter 'text' wajib diisi."
     })
   }
 
-  const params = new URLSearchParams({
-    text,
-    chattime,
-    statusbartime,
-    fontname,
-    signalname,
-    apikey: "freeApikey"
-  })
-
-  if (bubblecolor) params.append("bubblecolor", bubblecolor)
-  if (menucolor) params.append("menucolor", menucolor)
-  if (textcolor) params.append("textcolor", textcolor)
-
   try {
+    const now = new Date()
+    const timeNow = now.toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      timeZone: "Asia/Jakarta"
+    })
+
     const response = await fetch(
-      `https://anabot.my.id/api/maker/iqc?${params.toString()}`
+      'https://anabot.my.id/api/maker/iqc?' +
+      `text=${encodeURIComponent(text)}` +
+      `&chatTime=${encodeURIComponent(timeNow)}` +
+      `&statusBarTime=${encodeURIComponent(timeNow)}` +
+      '&bubbleColor=%23272a2f' +
+      '&menuColor=%23272a2f' +
+      '&textColor=%23FFFFFF' +
+      '&fontName=Arial' +
+      '&signalName=Telkomsel' +
+      '&apikey=freeApikey'
     )
 
     if (!response.ok) {
@@ -48,11 +43,12 @@ export default async function handler(req, res) {
     )
 
     res.send(buffer)
-  } catch (e) {
+
+  } catch (err) {
     res.status(500).json({
       status: false,
       creator: "Vanz API",
-      message: e.message
+      message: err.message
     })
   }
 }
