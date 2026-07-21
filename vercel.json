@@ -34,7 +34,7 @@
     },
     {
       "source": "/(.*)",
-      "destination": "/index.js"
+      "destination": "/error.html"
     }
   ]
 }
