@@ -96,8 +96,8 @@
                     <div class="icon-wrapper icon-download">
                         <i class="fas fa-download"></i>
                     </div>
-                    <h3>DOWNLOAD</h3>
-                    <p class="endpoint-count">0 endpoints</p>
+                    <h3>DOWNLOADER</h3>
+                    <p class="endpoint-count">1 endpoint</p>
                 </div>
 
                 <div class="category-card" onclick="openCategory('tools')">
@@ -247,6 +247,56 @@
                         
                         <div class="api-url-preview-box">
                             <span class="url-text-display">https://vanz-api-one.vercel.app/api/maker/brat?text=VanzDev</span>
+                            <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+
+                        <div class="api-result-box" style="display: none;">
+                            <div class="api-result-header">
+                                <span>Response Result</span>
+                                <button class="btn-clear-result" onclick="clearResult(this)">Clear</button>
+                            </div>
+                            <pre><code class="json-output"></code></pre>
+                            <div class="image-output-container" style="display: none; padding: 1rem; text-align: center; background: #0a0a0a;">
+                                <img class="image-output" src="" alt="API Result" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint-group" data-category="downloader" style="display: none;">
+                <div class="card api-card" data-base-path="/api/downloader/allinone" data-type="multi">
+                    <div class="api-card-header">
+                        <span class="endpoint-badge badge-get">GET</span> 
+                        <span class="api-path">/api/downloader/allinone</span>
+                    </div>
+                    <p class="api-desc">Mengunduh media (audio/video) dari berbagai platform seperti TikTok, YouTube, IG, dll. dengan opsi format MP3 atau MP4.</p>
+                    
+                    <div class="api-test-container">
+                        <div class="api-multi-inputs" style="display: flex; flex-direction: column; gap: 0.8rem; width: 100%;">
+                            <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                                <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">URL Media</label>
+                                <div class="api-input-group" style="width: 100%;">
+                                    <input type="text" class="api-test-input multi-param" data-param="url" placeholder="Masukkan URL media dari platform yang didukung..." value="https://vt.tiktok.com/ZSXXtFL7c">
+                                </div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                                <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Format (mp3 / mp4)</label>
+                                <div class="api-input-group" style="width: 100%;">
+                                    <input type="text" class="api-test-input multi-param" data-param="format" placeholder="mp3 atau mp4" value="mp3">
+                                </div>
+                            </div>
+                            <div style="align-self: flex-end; width: 100%; margin-top: 0.4rem;">
+                                <button class="btn btn-primary" style="padding: 0.8rem; font-size: 1rem; width: 100%; max-width: none;" onclick="testRequest(this)">
+                                    <i class="fas fa-paper-plane"></i> TEST REQUEST
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="api-url-preview-box" style="margin-top: 0.5rem;">
+                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/downloader/allinone?url=https%3A%2F%2Fvt.tiktok.com%2FZSXXtFL7c&format=mp3</span>
                             <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
                                 <i class="far fa-copy"></i>
                             </button>
