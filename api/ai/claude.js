@@ -5,13 +5,13 @@ export default async function handler(req, res) {
     return res.status(400).json({
       status: false,
       creator: "Vanz API",
-      message: "Parameter 'q' atau 'message' wajib diisi."
+      message: "Parameter 'q' wajib diisi."
     })
   }
 
   try {
     const response = await fetch(
-      `https://api.azbry.com/api/ai/claude?prompt=${encodeURIComponent(prompt)}`
+      `https://api.azbry.com/api/ai/claude?q=${encodeURIComponent(prompt)}`
     )
 
     const data = await response.json()
