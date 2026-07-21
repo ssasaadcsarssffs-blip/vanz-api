@@ -143,7 +143,7 @@ async function testRequest(element) {
                 jsonOutput.textContent = JSON.stringify({
                     status: true,
                     creator: "Vanz API",
-                    contentType
+                    contentType: contentType
                 }, null, 2);
 
                 imgOutput.src = imageUrl;
@@ -199,14 +199,28 @@ function clearResult(btn) {
     resultBox.style.display = 'none';
 }
 
-function loadDashboardData() {
-    const totalReq = localStorage.getItem('vanz_total_requests') || '0';
+async function loadDashboardData() {
     const totalReqElem = document.getElementById('dash-total-req');
-    if (totalReqElem) totalReqElem.textContent = totalReq;
+    
+    try {
+        const res = await fetch('https://vanz-api-one.vercel.app/api/stats');
+        if (res.ok) {
+            const data = await res.json();
+            if (totalReqElem) totalReqElem.textContent = data.totalRequests || '0';
+        } else {
+            const localReq = localStorage.getItem('vanz_total_requests') || '0';
+            if (totalReqElem) totalReqElem.textContent = localReq;
+        }
+    } catch (err) {
+        const localReq = localStorage.getItem('vanz_total_requests') || '0';
+        if (totalReqElem) totalReqElem.textContent = localReq;
+    }
 
     const cards = document.querySelectorAll('.api-card');
     const totalEndpointsElem = document.getElementById('dash-total-endpoints');
-    if (totalEndpointsElem) totalEndpointsElem.textContent = cards.length;
+    if (totalEndpointsElem) {
+        totalEndpointsElem.textContent = cards.length;
+    }
 
     fetchUserIp();
     fetchUserBattery();
