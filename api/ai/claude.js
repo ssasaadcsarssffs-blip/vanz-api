@@ -1,11 +1,11 @@
 export default async function handler(req, res) {
-  const { prompt } = req.query
+  const prompt = req.query.q || req.query.message
 
   if (!prompt) {
     return res.status(400).json({
       status: false,
       creator: "Vanz API",
-      message: "Parameter 'prompt' wajib diisi."
+      message: "Parameter 'q' atau 'message' wajib diisi."
     })
   }
 
