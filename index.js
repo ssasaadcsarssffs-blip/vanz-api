@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 const app = express();
 
 app.use(cors());
@@ -13,12 +12,6 @@ app.use((req, res, next) => {
         globalTotalRequests++;
     }
     next();
-});
-
-app.use(express.static(path.join(__dirname, './')));
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.get('/api/stats', (req, res) => {
@@ -39,10 +32,3 @@ app.get('/api/ai/vanz-ai', (req, res) => {
 });
 
 module.exports = app;
-
-if (process.env.NODE_ENV !== 'production') {
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-        console.log(`Server lokal berjalan di http://localhost:${PORT}`);
-    });
-}
