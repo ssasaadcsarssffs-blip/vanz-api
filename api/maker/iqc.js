@@ -1,46 +1,58 @@
 export default async function handler(req, res) {
-  const { text } = req.query
+  const {
+    text,
+    chattime,
+    statusbartime,
+    bubblecolor,
+    menucolor,
+    textcolor,
+    fontname,
+    signalname
+  } = req.query
 
-  if (!text) {
+  if (!text || !chattime || !statusbartime || !fontname || !signalname) {
     return res.status(400).json({
       status: false,
       creator: "Vanz API",
-      message: "Parameter 'text' wajib diisi."
+      message: "Parameter wajib: text, chattime, statusbartime, fontname, signalname"
     })
   }
 
+  const params = new URLSearchParams({
+    text,
+    chattime,
+    statusbartime,
+    fontname,
+    signalname,
+    apikey: "freeApikey"
+  })
+
+  if (bubblecolor) params.append("bubblecolor", bubblecolor)
+  if (menucolor) params.append("menucolor", menucolor)
+  if (textcolor) params.append("textcolor", textcolor)
+
   try {
     const response = await fetch(
-      `https://anabot.my.id/api/maker/iqc?text=${encodeURIComponent(text)}&apikey=freeApikey`
+      `https://anabot.my.id/api/maker/iqc?${params.toString()}`
     )
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`)
+      throw new Error(await response.text())
     }
 
-    const contentType = response.headers.get("content-type") || ""
-
-    // Jika hasilnya JSON
-    if (contentType.includes("application/json")) {
-      const data = await response.json()
-
-      return res.status(200).json({
-        creator: "Vanz API",
-        ...data
-      })
-    }
-
-    // Jika hasilnya gambar/file
     const buffer = Buffer.from(await response.arrayBuffer())
 
-    res.setHeader("Content-Type", contentType)
-    res.send(buffer)
+    res.setHeader(
+      "Content-Type",
+      response.headers.get("content-type") || "image/png"
+    )
 
-  } catch (err) {
+    res.send(buffer)
+  } catch (e) {
     res.status(500).json({
       status: false,
       creator: "Vanz API",
-      message: err.message
+      message: e.message
     })
   }
 }
