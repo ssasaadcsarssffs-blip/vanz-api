@@ -3,450 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VANZ API - Developer Platform</title>
-    <link class="nav-link" rel="stylesheet" href="Css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>VANZ API - Rest API Free</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="Css/style.css">
 </head>
 <body>
 
-    <header>
-        <nav class="navbar">
-            <div class="logo-group">
-                <span class="white-dot"></span>
-                <div class="logo">VANZ API</div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="brand-logo" onclick="switchTab('home')">
+                <span>VANZ API</span>
+            </a>
+            <div class="nav-menu">
+                <a href="#" class="nav-link active" data-target="home">HOME</a>
+                <a href="#" class="nav-link" data-target="dashboard">DASHBOARD</a>
+                <a href="#" class="nav-link" data-target="documentation">DOCUMENTATION</a>
+                <a href="#" class="nav-link" data-target="endpoints">ENDPOINTS</a>
+                <a href="#" class="nav-link" data-target="status">STATUS</a>
+                <a href="#" class="nav-link" data-target="changelog">CHANGELOG</a>
+                <a href="#" class="nav-link" data-target="contact">CONTACT</a>
             </div>
-            <ul class="nav-links">
-                <li><a class="nav-link active" data-target="home">Home</a></li>
-                <li><a class="nav-link" data-target="dashboard">Dashboard</a></li>
-                <li><a class="nav-link" data-target="documentation">Documentation</a></li>
-                <li><a class="nav-link" data-target="endpoints">Endpoints</a></li>
-                <li><a class="nav-link" data-target="status">Status</a></li>
-                <li><a class="nav-link" data-target="changelog">Changelog</a></li>
-                <li><a class="nav-link" data-target="contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
-    <main class="grid-background">
-        
-        <!-- HOME SECTION -->
-        <section id="home" class="tab-content active hero-section">
-            <div class="hero-content">
-                <div class="badge-container">
-                    <span class="lightning-icon">⚡</span>
-                    <span class="badge-text">BUILT FOR DEVELOPERS</span>
+    <main class="main-content">
+
+        <section id="home" class="tab-content active">
+            <div class="hero-section">
+                <div class="hero-badge">
+                    <i class="fas fa-bolt"></i> BUILT FOR DEVELOPERS
                 </div>
-
                 <h1 class="hero-title">VANZ API</h1>
                 <p class="hero-subtitle">FREE REST API</p>
-
                 <p class="hero-description">
-                    Layanan API gratis dan andal yang dirancang untuk pengembangan aplikasi modern. 
-                    Dibangun dengan Node.js dan TypeScript, menghadirkan performa cepat, 
-                    endpoint stabil, dan integrasi mudah.
+                    Layanan API gratis dan andal yang dirancang untuk pengembangan aplikasi modern. Dibangun dengan Node.js dan TypeScript, menghadirkan performa cepat, endpoint stabil, dan integrasi mudah.
                 </p>
-
-                <div class="action-buttons" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <div class="hero-buttons">
                     <button class="btn btn-primary" onclick="switchTab('dashboard')">
                         <i class="fas fa-chart-line"></i> DASHBOARD
                     </button>
-                    <button class="btn btn-secondary btn-read-docs" style="border: 1px solid rgba(255,255,255,0.2); background: transparent; color: #fff;" onclick="switchTab('documentation')">
-                        <i class="fas fa-book-open"></i> READ DOCS
+                    <button class="btn btn-secondary" onclick="switchTab('documentation')">
+                        <i class="fas fa-book"></i> READ DOCS
                     </button>
                 </div>
-
-                <div class="scroll-indicator">
+                <div class="scroll-indicator" onclick="switchTab('documentation')" style="cursor: pointer;">
                     <span class="scroll-text">SCROLL</span>
                     <span class="scroll-line"></span>
                 </div>
             </div>
         </section>
 
-        <!-- DASHBOARD SECTION -->
         <section id="dashboard" class="tab-content">
-            <div class="docs-header">
-                <h1 class="section-title">SYSTEM DASHBOARD</h1>
-                <p class="section-subtitle">Ringkasan statistik penggunaan dan informasi perangkat kamu.</p>
+            <div class="section-header">
+                <h2>SYSTEM DASHBOARD</h2>
+                <p>Ringkasan statistik penggunaan dan informasi perangkat kamu.</p>
             </div>
-
-            <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
-                
-                <div class="card" style="display: flex; flex-direction: column; gap: 0.5rem; border-left: 4px solid #3b82f6;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; color: #a3a3a3;">
-                        <span style="font-size: 0.9rem; font-weight: 500;">TOTAL REQUEST (HARI INI)</span>
-                        <i class="fas fa-paper-plane" style="color: #3b82f6;"></i>
+            <div class="dashboard-grid">
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <span>TOTAL REQUEST (HARI INI)</span>
+                        <i class="fas fa-paper-plane icon-blue"></i>
                     </div>
-                    <h2 id="dash-total-req" style="font-size: 2rem; font-weight: 700; margin: 0;">0</h2>
-                    <span style="font-size: 0.75rem; color: #737373;">Dihitung dari Sesi Browser Ini</span>
+                    <div class="dash-card-value" id="dash-total-req">0</div>
+                    <div class="dash-card-sub">Dihitung dari Sesi Browser Ini</div>
                 </div>
-
-                <div class="card" style="display: flex; flex-direction: column; gap: 0.5rem; border-left: 4px solid #10b981;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; color: #a3a3a3;">
-                        <span style="font-size: 0.9rem; font-weight: 500;">BATERAI USER</span>
-                        <i class="fas fa-battery-half" style="color: #10b981;"></i>
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <span>BATERAI USER</span>
+                        <i class="fas fa-battery-half icon-green"></i>
                     </div>
-                    <h2 id="dash-battery" style="font-size: 2rem; font-weight: 700; margin: 0;">Memuat...</h2>
-                    <span id="dash-battery-status" style="font-size: 0.75rem; color: #737373;">Mendeteksi status pengisian...</span>
+                    <div class="dash-card-value" id="dash-battery">Memuat...</div>
+                    <div class="dash-card-sub" id="dash-battery-status">Mendeteksi status pengisian...</div>
                 </div>
-
-                <div class="card" style="display: flex; flex-direction: column; gap: 0.5rem; border-left: 4px solid #a855f7;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; color: #a3a3a3;">
-                        <span style="font-size: 0.9rem; font-weight: 500;">IP PUBLIC USER</span>
-                        <i class="fas fa-network-wired" style="color: #a855f7;"></i>
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <span>IP PUBLIK</span>
+                        <i class="fas fa-network-wired icon-purple"></i>
                     </div>
-                    <h2 id="dash-ip" style="font-size: 1.4rem; font-weight: 700; margin: 0; word-break: break-all;">Memuat...</h2>
-                    <span style="font-size: 0.75rem; color: #737373;">Alamat IP Publik Kamu</span>
+                    <div class="dash-card-value" id="dash-ip">Memuat...</div>
+                    <div class="dash-card-sub">Alamat IP publik kamu saat ini</div>
                 </div>
-
-                <div class="card" style="display: flex; flex-direction: column; gap: 0.5rem; border-left: 4px solid #ec4899;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; color: #a3a3a3;">
-                        <span style="font-size: 0.9rem; font-weight: 500;">TOTAL ENDPOINT</span>
-                        <i class="fas fa-code-branch" style="color: #ec4899;"></i>
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <span>TOTAL ENDPOINT</span>
+                        <i class="fas fa-code icon-orange"></i>
                     </div>
-                    <h2 id="dash-total-endpoints" style="font-size: 2rem; font-weight: 700; margin: 0;">0</h2>
-                    <span style="font-size: 0.75rem; color: #737373;">Aktif & Siap Digunakan</span>
+                    <div class="dash-card-value" id="dash-total-endpoints">0</div>
+                    <div class="dash-card-sub">Fitur aktif yang tersedia</div>
                 </div>
-
             </div>
         </section>
 
-        <!-- DOCUMENTATION SECTION -->
         <section id="documentation" class="tab-content">
-            <div class="docs-header">
-                <h1 class="section-title">ENDPOINTS ACROSS CATEGORIES</h1>
-                <p class="section-subtitle">All free. Just follow the usage rules.</p>
+            <div class="section-header">
+                <h2>ENDPOINTS ACROSS CATEGORIES</h2>
+                <p>All free. Just follow the usage rules.</p>
             </div>
-            
             <div class="categories-grid">
                 <div class="category-card" onclick="openCategory('ai')">
-                    <div class="icon-wrapper icon-ai">
-                        <i class="fas fa-brain"></i>
-                    </div>
+                    <div class="category-icon"><i class="fas fa-brain"></i></div>
                     <h3>AI</h3>
-                    <p class="endpoint-count">1 endpoint</p>
+                    <p>1 endpoint</p>
                 </div>
-
                 <div class="category-card" onclick="openCategory('canvas')">
-                    <div class="icon-wrapper" style="background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2);">
-                        <i class="fas fa-layer-group"></i>
-                    </div>
+                    <div class="category-icon"><i class="fas fa-layer-group"></i></div>
                     <h3>CANVAS</h3>
-                    <p class="endpoint-count">1 endpoint</p>
+                    <p>1 endpoint</p>
                 </div>
-
                 <div class="category-card" onclick="openCategory('maker')">
-                    <div class="icon-wrapper icon-tools" style="background-color: rgba(236, 72, 153, 0.1); color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.2);">
-                        <i class="fas fa-palette"></i>
-                    </div>
+                    <div class="category-icon"><i class="fas fa-palette"></i></div>
                     <h3>MAKER</h3>
-                    <p class="endpoint-count">1 endpoint</p>
+                    <p>1 endpoint</p>
                 </div>
-
-                <div class="category-card" onclick="openCategory('downloader')">
-                    <div class="icon-wrapper icon-download">
-                        <i class="fas fa-download"></i>
-                    </div>
-                    <h3>DOWNLOADER</h3>
-                    <p class="endpoint-count">1 endpoint</p>
-                </div>
-
-                <div class="category-card" onclick="openCategory('tools')">
-                    <div class="icon-wrapper icon-tools">
-                        <i class="fas fa-tools"></i>
-                    </div>
-                    <h3>TOOLS</h3>
-                    <p class="endpoint-count">1 endpoint</p>
-                </div>
-            </div>
-
-            <div class="card" style="margin-top: 3rem;">
-                <h3>Base URL</h3>
-                <p>Semua request harus diarahkan ke URL dasar berikut:</p>
-                <pre><code>https://vanz-api-one.vercel.app</code></pre>
             </div>
         </section>
 
-        <!-- ENDPOINTS SECTION -->
         <section id="endpoints" class="tab-content">
-            <h2>Daftar Endpoints</h2>
-            <p style="margin-bottom: 2rem;">Silakan tes request secara live pada masing-masing endpoint di bawah ini.</p>
-            
+            <div class="section-header">
+                <h2>API ENDPOINTS LIST</h2>
+                <p>Uji coba endpoint secara langsung melalui form di bawah ini.</p>
+            </div>
+
             <div class="endpoint-group" data-category="ai">
-                <div class="card api-card" data-base-path="/api/ai/vanz-ai" data-type="single" data-param-name="prompt">
+                <h3 class="group-title"><i class="fas fa-brain"></i> AI ENDPOINTS</h3>
+                <div class="api-card" data-base-path="/api/ai/vanz-ai" data-type="single" data-param-name="prompt" data-response-type="json">
                     <div class="api-card-header">
-                        <span class="endpoint-badge badge-get">GET</span> 
+                        <span class="badge badge-get">GET</span>
                         <span class="api-path">/api/ai/vanz-ai</span>
                     </div>
-                    <p class="api-desc">Berinteraksi dengan model VANZ AI menggunakan parameter prompt teks untuk menghasilkan jawaban responsif.</p>
-                    
-                    <div class="api-test-container">
-                        <div class="api-input-group">
-                            <input type="text" class="api-test-input" placeholder="Masukkan prompt kamu di sini (cth: Siapa kamu?)..." value="Siapa kamu?">
-                            <button class="btn-api-send" onclick="testRequest(this)" title="Test Request">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
+                    <p class="api-desc">Respon AI serbaguna dari Vanz API.</p>
+                    <div class="api-inputs">
+                        <input type="text" class="api-test-input" placeholder="Masukkan prompt (cth: Halo AI)">
+                    </div>
+                    <div class="api-url-preview-box">
+                        <span class="url-text-display">https://vanz-api-one.vercel.app/api/ai/vanz-ai</span>
+                        <button class="btn-copy" onclick="copyUrlFromBox(this)"><i class="far fa-copy"></i></button>
+                    </div>
+                    <div class="api-actions">
+                        <button class="btn btn-test" onclick="testRequest(this)"><i class="fas fa-play"></i> TEST REQUEST</button>
+                    </div>
+                    <div class="api-result-box" style="display: none;">
+                        <div class="result-header">
+                            <span>Response Output:</span>
+                            <button class="btn-clear" onclick="clearResult(this)"><i class="fas fa-times"></i> Clear</button>
                         </div>
-                        
-                        <div class="api-url-preview-box">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/ai/vanz-ai?prompt=Siapa%20kamu%3F</span>
-                            <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
-                                <i class="far fa-copy"></i>
-                            </button>
-                        </div>
-
-                        <div class="api-result-box" style="display: none;">
-                            <div class="api-result-header">
-                                <span>Response Result</span>
-                                <button class="btn-clear-result" onclick="clearResult(this)">Clear</button>
-                            </div>
-                            <pre><code class="json-output"></code></pre>
-                            <div class="image-output-container" style="display: none; padding: 1rem; text-align: center; background: #0a0a0a;">
-                                <img class="image-output" src="" alt="API Result" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                            </div>
+                        <pre class="json-output"></pre>
+                        <div class="image-output-container" style="display: none;">
+                            <img class="image-output" src="" alt="Result Image">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="endpoint-group" data-category="canvas" style="display: none;">
-                <div class="card api-card" data-base-path="/api/canvas/fakenotif" data-type="multi" data-response-type="image">
-                    <div class="api-card-header">
-                        <span class="endpoint-badge badge-get">GET</span> 
-                        <span class="api-path">/api/canvas/fakenotif</span>
-                    </div>
-                    <p class="api-desc">Membuat gambar notifikasi tiruan bergaya iOS Lockscreen berdasarkan parameter teks dan URL foto profil.</p>
-                    
-                    <div class="api-test-container">
-                        <div class="api-multi-inputs" style="display: flex; flex-direction: column; gap: 0.8rem; width: 100%;">
-                            <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Foto Profil (Masukkan URL Gambar)</label>
-                                <div class="api-input-group" style="width: 100%;">
-                                    <input type="text" class="api-test-input multi-param" data-param="ppurl" placeholder="Masukkan URL gambar foto profil (https://...)" value="https://uploader.zenzxz.dpdns.org/uploads/1783937277449.jpeg">
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 0.8rem;">
-                                <div style="flex: 1; display: flex; flex-direction: column; gap: 0.3rem;">
-                                    <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Username Pengirim</label>
-                                    <div class="api-input-group">
-                                        <input type="text" class="api-test-input multi-param" data-param="username" placeholder="Nama..." value="ZennzXD">
-                                    </div>
-                                </div>
-                                <div style="flex: 1; display: flex; flex-direction: column; gap: 0.3rem;">
-                                    <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Isi Pesan</label>
-                                    <div class="api-input-group">
-                                        <input type="text" class="api-test-input multi-param" data-param="chat" placeholder="Pesan..." value="Haii sayangg udah makan belumm? 🥺">
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 0.8rem;">
-                                <div style="flex: 1; display: flex; flex-direction: column; gap: 0.3rem;">
-                                    <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Tanggal</label>
-                                    <div class="api-input-group">
-                                        <input type="text" class="api-test-input multi-param" data-param="tanggal" placeholder="Hari, Tgl..." value="Senin, 6 Maret">
-                                    </div>
-                                </div>
-                                <div style="flex: 1; display: flex; flex-direction: column; gap: 0.3rem;">
-                                    <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Jam</label>
-                                    <div class="api-input-group">
-                                        <input type="text" class="api-test-input multi-param" data-param="jam" placeholder="Waktu..." value="18.30">
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="align-self: flex-end; width: 100%; margin-top: 0.4rem;">
-                                <button class="btn btn-primary" style="padding: 0.8rem; font-size: 1rem; width: 100%; max-width: none;" onclick="testRequest(this)">
-                                    <i class="fas fa-paper-plane"></i> TEST REQUEST
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="api-url-preview-box" style="margin-top: 0.5rem;">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/canvas/fakenotif?ppurl=https%3A%2F%2Fuploader.zenzxz.dpdns.org%2Fuploads%2F1783937277449.jpeg&username=ZennzXD&chat=Haii%20sayangg%20udah%20makan%20belumm%3F%20%F0%9F%A5%BA&tanggal=Senin,%206%20Maret&jam=18.30</span>
-                            <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
-                                <i class="far fa-copy"></i>
-                            </button>
-                        </div>
-
-                        <div class="api-result-box" style="display: none;">
-                            <div class="api-result-header">
-                                <span>Response Result</span>
-                                <button class="btn-clear-result" onclick="clearResult(this)">Clear</button>
-                            </div>
-                            <pre><code class="json-output"></code></pre>
-                            <div class="image-output-container" style="display: none; padding: 1rem; text-align: center; background: #0a0a0a;">
-                                <img class="image-output" src="" alt="API Result" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="endpoint-group" data-category="maker" style="display: none;">
-                <div class="card api-card" data-base-path="/api/maker/brat" data-type="single" data-param-name="text" data-response-type="image">
-                    <div class="api-card-header">
-                        <span class="endpoint-badge badge-get">GET</span> 
-                        <span class="api-path">/api/maker/brat</span>
-                    </div>
-                    <p class="api-desc">Membuat gambar bergaya Brat kustom menggunakan parameter input teks.</p>
-                    
-                    <div class="api-test-container">
-                        <div class="api-input-group">
-                            <input type="text" class="api-test-input" placeholder="Masukkan teks di sini..." value="VanzDev">
-                            <button class="btn-api-send" onclick="testRequest(this)" title="Test Request">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                        
-                        <div class="api-url-preview-box">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/maker/brat?text=VanzDev</span>
-                            <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
-                                <i class="far fa-copy"></i>
-                            </button>
-                        </div>
-
-                        <div class="api-result-box" style="display: none;">
-                            <div class="api-result-header">
-                                <span>Response Result</span>
-                                <button class="btn-clear-result" onclick="clearResult(this)">Clear</button>
-                            </div>
-                            <pre><code class="json-output"></code></pre>
-                            <div class="image-output-container" style="display: none; padding: 1rem; text-align: center; background: #0a0a0a;">
-                                <img class="image-output" src="" alt="API Result" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="endpoint-group" data-category="downloader" style="display: none;">
-                <div class="card api-card" data-base-path="/api/downloader/allinone" data-type="multi">
-                    <div class="api-card-header">
-                        <span class="endpoint-badge badge-get">GET</span> 
-                        <span class="api-path">/api/downloader/allinone</span>
-                    </div>
-                    <p class="api-desc">Mengunduh media (audio/video) dari berbagai platform seperti TikTok, YouTube, IG, dll. dengan opsi format MP3 atau MP4.</p>
-                    
-                    <div class="api-test-container">
-                        <div class="api-multi-inputs" style="display: flex; flex-direction: column; gap: 0.8rem; width: 100%;">
-                            <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">URL Media</label>
-                                <div class="api-input-group" style="width: 100%;">
-                                    <input type="text" class="api-test-input multi-param" data-param="url" placeholder="Masukkan URL media dari platform yang didukung..." value="https://vt.tiktok.com/ZSXXtFL7c">
-                                </div>
-                            </div>
-                            <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Format (mp3 / mp4)</label>
-                                <div class="api-input-group" style="width: 100%;">
-                                    <input type="text" class="api-test-input multi-param" data-param="format" placeholder="mp3 atau mp4" value="mp3">
-                                </div>
-                            </div>
-                            <div style="align-self: flex-end; width: 100%; margin-top: 0.4rem;">
-                                <button class="btn btn-primary" style="padding: 0.8rem; font-size: 1rem; width: 100%; max-width: none;" onclick="testRequest(this)">
-                                    <i class="fas fa-paper-plane"></i> TEST REQUEST
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="api-url-preview-box" style="margin-top: 0.5rem;">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/downloader/allinone?url=https%3A%2F%2Fvt.tiktok.com%2FZSXXtFL7c&format=mp3</span>
-                            <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
-                                <i class="far fa-copy"></i>
-                            </button>
-                        </div>
-
-                        <div class="api-result-box" style="display: none;">
-                            <div class="api-result-header">
-                                <span>Response Result</span>
-                                <button class="btn-clear-result" onclick="clearResult(this)">Clear</button>
-                            </div>
-                            <pre><code class="json-output"></code></pre>
-                            <div class="image-output-container" style="display: none; padding: 1rem; text-align: center; background: #0a0a0a;">
-                                <img class="image-output" src="" alt="API Result" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="endpoint-group" data-category="tools" style="display: none;">
-                <div class="card api-card" data-base-path="/api/tools/removebg" data-type="single" data-param-name="image" data-response-type="image">
-                    <div class="api-card-header">
-                        <span class="endpoint-badge badge-get">GET</span> 
-                        <span class="api-path">/api/tools/removebg</span>
-                    </div>
-                    <p class="api-desc">Menghapus latar belakang (background) dari gambar berdasarkan URL foto yang dikirimkan.</p>
-                    
-                    <div class="api-test-container">
-                        <div class="api-input-group">
-                            <input type="text" class="api-test-input" placeholder="Masukkan URL gambar (https://...)..." value="https://uploader.zenzxz.dpdns.org/uploads/1783937277449.jpeg">
-                            <button class="btn-api-send" onclick="testRequest(this)" title="Test Request">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                        
-                        <div class="api-url-preview-box">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/tools/removebg?image=https%3A%2F%2Fuploader.zenzxz.dpdns.org%2Fuploads%2F1783937277449.jpeg</span>
-                            <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
-                                <i class="far fa-copy"></i>
-                            </button>
-                        </div>
-
-                        <div class="api-result-box" style="display: none;">
-                            <div class="api-result-header">
-                                <span>Response Result</span>
-                                <button class="btn-clear-result" onclick="clearResult(this)">Clear</button>
-                            </div>
-                            <pre><code class="json-output"></code></pre>
-                            <div class="image-output-container" style="display: none; padding: 1rem; text-align: center; background: #0a0a0a;">
-                                <img class="image-output" src="" alt="API Result" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </section>
 
-        <!-- STATUS SECTION -->
         <section id="status" class="tab-content">
-            <h2>Status Server</h2>
-            <p>Pantau performa dan uptime server VANZ API secara real-time.</p>
-            <div class="card">
-                <h3><span class="status-online"></span> Semua Sistem Operasional</h3>
-                <p>Uptime Bulan Ini: <strong>99.98%</strong></p>
-                <p>Waktu Respon Rata-rata: <strong>120ms</strong></p>
+            <div class="section-header">
+                <h2>SYSTEM STATUS</h2>
+                <p>Semua sistem berjalan dengan normal.</p>
             </div>
         </section>
 
-        <!-- CHANGELOG SECTION -->
         <section id="changelog" class="tab-content">
-            <h2>Catatan Perubahan (Changelog)</h2>
-            <p>Riwayat pembaruan sistem pada VANZ API.</p>
-            <div class="card">
-                <h3>Versi 1.0.0 (Terbaru)</h3>
-                <p>• Integrasi fitur Live Test Request langsung di halaman endpoint.<br>
-                   • Pengalihan parameter AI ke basis <code>?prompt=</code> untuk fleksibilitas bot.</p>
+            <div class="section-header">
+                <h2>CHANGELOG</h2>
+                <p>Catatan pembaruan API Vanz.</p>
             </div>
         </section>
 
-        <!-- CONTACT SECTION -->
         <section id="contact" class="tab-content">
-            <h2>Hubungi Kami</h2>
-            <p>Punya pertanyaan atau laporan bug? Silakan hubungi kami.</p>
-            <div class="card">
-                <h3>Kontak Developer</h3>
-                <p>📧 Email: <code>support@vanzdev.xyz</code></p>
-                <p>💬 Telegram: <code>@t.me/RenSiSell</code></p>
-                <button class="btn btn-primary" style="max-width: 200px; padding: 0.8rem;" onclick="location.href='mailto:support@vanzdev.xyz'">Kirim Email</button>
+            <div class="section-header">
+                <h2>CONTACT DEVELOPER</h2>
+                <p>Hubungi jika ada kendala atau saran.</p>
             </div>
         </section>
 
     </main>
-
-    <footer>
-        <p>&copy; 2026 VANZ API. Powered by Vanz Dev. All rights reserved.</p>
-    </footer>
 
     <script src="Script/script.js"></script>
 </body>
