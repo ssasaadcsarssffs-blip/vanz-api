@@ -291,3 +291,4 @@ function fetchUserBattery() {
         batteryStatusElem.textContent = 'Browser tidak mendukung Battery API';
     }
 }
+
