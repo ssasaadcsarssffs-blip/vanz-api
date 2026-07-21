@@ -1,32 +1,48 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Variabel penampung request global
 let globalTotalRequests = 0;
 
-// Middleware: Hitung tiap ada request masuk
 app.use((req, res, next) => {
-    // Abaikan favicon agar tidak merusak hitungan
     if (req.path !== '/favicon.ico') {
         globalTotalRequests++;
     }
     next();
 });
 
-// Endpoint untuk kirim data ke Dashboard Landing Page
+app.use(express.static(path.join(__dirname, './')));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 app.get('/api/stats', (req, res) => {
     res.json({
         status: true,
+        creator: "Vanz API",
         totalRequests: globalTotalRequests
     });
 });
 
-// Contoh mengarahkan endpoint lain jika diperlukan
-// app.use('/api/ai', require('./api/ai')); 
+app.get('/api/ai/vanz-ai', (req, res) => {
+    const prompt = req.query.prompt || 'Halo!';
+    res.json({
+        status: true,
+        creator: "Vanz API",
+        result: `Halo! Ini adalah respon dari VANZ AI untuk prompt: "${prompt}"`
+    });
+});
 
-// Export untuk Vercel Serverless
 module.exports = app;
+
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`Server lokal berjalan di http://localhost:${PORT}`);
+    });
+}
