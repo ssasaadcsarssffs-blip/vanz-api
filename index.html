@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VANZ API - Developer Platform</title>
-    <link rel="stylesheet" href="Css/style.css">
+    <link class="nav-link" rel="stylesheet" href="Css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
@@ -142,7 +142,7 @@
                         <i class="fas fa-palette"></i>
                     </div>
                     <h3>MAKER</h3>
-                    <p class="endpoint-count">2 endpoints</p>
+                    <p class="endpoint-count">1 endpoint</p>
                 </div>
 
                 <div class="category-card" onclick="openCategory('downloader')">
@@ -174,7 +174,6 @@
             <h2>Daftar Endpoints</h2>
             <p style="margin-bottom: 2rem;">Silakan tes request secara live pada masing-masing endpoint di bawah ini.</p>
             
-            <!-- AI Category -->
             <div class="endpoint-group" data-category="ai">
                 <div class="card api-card" data-base-path="/api/ai/vanz-ai" data-type="single" data-param-name="prompt">
                     <div class="api-card-header">
@@ -212,7 +211,6 @@
                 </div>
             </div>
 
-            <!-- Canvas Category -->
             <div class="endpoint-group" data-category="canvas" style="display: none;">
                 <div class="card api-card" data-base-path="/api/canvas/fakenotif" data-type="multi" data-response-type="image">
                     <div class="api-card-header">
@@ -285,9 +283,7 @@
                 </div>
             </div>
 
-            <!-- Maker Category -->
             <div class="endpoint-group" data-category="maker" style="display: none;">
-                <!-- Brat Maker -->
                 <div class="card api-card" data-base-path="/api/maker/brat" data-type="single" data-param-name="text" data-response-type="image">
                     <div class="api-card-header">
                         <span class="endpoint-badge badge-get">GET</span> 
@@ -322,45 +318,8 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- IQC Maker -->
-                <div class="card api-card" data-base-path="/api/maker/iqc" data-type="single" data-param-name="text" data-response-type="image" style="margin-top: 1.5rem;">
-                    <div class="api-card-header">
-                        <span class="endpoint-badge badge-get">GET</span> 
-                        <span class="api-path">/api/maker/iqc</span>
-                    </div>
-                    <p class="api-desc">Membuat gambar iPhone Quote Card (IQC) kustom menggunakan parameter input teks.</p>
-                    
-                    <div class="api-test-container">
-                        <div class="api-input-group">
-                            <input type="text" class="api-test-input" placeholder="Masukkan teks di sini..." value="Halo World">
-                            <button class="btn-api-send" onclick="testRequest(this)" title="Test Request">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                        
-                        <div class="api-url-preview-box">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/maker/iqc?text=Halo%20World</span>
-                            <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
-                                <i class="far fa-copy"></i>
-                            </button>
-                        </div>
-
-                        <div class="api-result-box" style="display: none;">
-                            <div class="api-result-header">
-                                <span>Response Result</span>
-                                <button class="btn-clear-result" onclick="clearResult(this)">Clear</button>
-                            </div>
-                            <pre><code class="json-output"></code></pre>
-                            <div class="image-output-container" style="display: none; padding: 1rem; text-align: center; background: #0a0a0a;">
-                                <img class="image-output" src="" alt="API Result" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <!-- Downloader Category -->
             <div class="endpoint-group" data-category="downloader" style="display: none;">
                 <div class="card api-card" data-base-path="/api/downloader/allinone" data-type="multi">
                     <div class="api-card-header">
@@ -411,7 +370,6 @@
                 </div>
             </div>
 
-            <!-- Tools Category -->
             <div class="endpoint-group" data-category="tools" style="display: none;">
                 <div class="card api-card" data-base-path="/api/tools/removebg" data-type="single" data-param-name="image" data-response-type="image">
                     <div class="api-card-header">
@@ -466,26 +424,29 @@
             <h2>Catatan Perubahan (Changelog)</h2>
             <p>Riwayat pembaruan sistem pada VANZ API.</p>
             <div class="card">
-                <h3>Versi 1.1.0 (Terbaru)</h3>
-                <p>• Penambahan endpoint baru <code>/api/maker/iqc</code> di kategori Maker.<br>
-                   • Perbaikan sistem routing Vercel static filesystem.</p>
+                <h3>Versi 1.0.0 (Terbaru)</h3>
+                <p>• Integrasi fitur Live Test Request langsung di halaman endpoint.<br>
+                   • Pengalihan parameter AI ke basis <code>?prompt=</code> untuk fleksibilitas bot.</p>
             </div>
         </section>
 
         <!-- CONTACT SECTION -->
         <section id="contact" class="tab-content">
-            <h2>Kontak & Komunitas</h2>
-            <p>Hubungi pengembang atau bergabung dengan komunitas kami.</p>
+            <h2>Hubungi Kami</h2>
+            <p>Punya pertanyaan atau laporan bug? Silakan hubungi kami.</p>
             <div class="card">
-                <h3>Saluran WhatsApp</h3>
-                <p>Dapatkan pembaruan terbaru dan bantuan langsung dari komunitas kami.</p>
-                <a href="https://whatsapp.com/channel/0029VaM10R982EV3U3C6q02k" target="_blank" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; margin-top: 1rem;">
-                    <i class="fab fa-whatsapp"></i> GABUNG SALURAN
-                </a>
+                <h3>Kontak Developer</h3>
+                <p>📢 Saluran: <code>https://whatsapp.com/channel/0029VbDYzVjIiRozEcjuzF11</code></p>
+                <p>💬 Telegram: <code>@t.me/RenSiSell</code></p>
+                <button class="btn btn-primary" style="max-width: 200px; padding: 0.8rem;" onclick="window.open('https://whatsapp.com/channel/0029VbDYzVjIiRozEcjuzF11', '_blank')">Gabung Saluran</button>
             </div>
         </section>
 
     </main>
+
+    <footer>
+        <p>&copy; 2026 VANZ API. Powered by Vanz Dev. All rights reserved.</p>
+    </footer>
 
     <script src="Script/script.js"></script>
 </body>
