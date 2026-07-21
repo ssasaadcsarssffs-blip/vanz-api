@@ -25,7 +25,7 @@ app.get('/api/stats', (req, res) => {
     });
 });
 
-// 2. AI ENDPOINT
+// 2a. AI ENDPOINT (VANZ AI)
 app.get('/api/ai/vanz-ai', (req, res) => {
     const prompt = req.query.prompt || 'Halo!';
     res.json({
@@ -33,6 +33,48 @@ app.get('/api/ai/vanz-ai', (req, res) => {
         creator: "Vanz API",
         result: `Halo! Ini adalah respon dari VANZ AI untuk prompt: "${prompt}"`
     });
+});
+
+// 2b. AI ENDPOINT (Claude AI)
+app.get('/api/ai/claude', async (req, res) => {
+    const prompt = req.query.prompt;
+
+    if (!prompt) {
+        return res.status(400).json({
+            status: false,
+            creator: "Vanz API",
+            message: "Parameter 'prompt' wajib diisi."
+        });
+    }
+
+    try {
+        const response = await fetch(
+            `https://api.azbry.com/api/ai/claude?prompt=${encodeURIComponent(prompt)}`
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.status) {
+            return res.status(response.status || 500).json({
+                status: false,
+                creator: "Vanz API",
+                message: data.message || "Gagal mengambil data dari provider AI."
+            });
+        }
+
+        return res.status(200).json({
+            status: true,
+            creator: "Vanz API",
+            result: data.result
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            status: false,
+            creator: "Vanz API",
+            message: err.message
+        });
+    }
 });
 
 // 3. DOWNLOADER ENDPOINT (All in One)
@@ -223,4 +265,3 @@ app.get('/api/tools/removebg', async (req, res) => {
 });
 
 module.exports = app;
-
