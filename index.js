@@ -6,6 +6,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Serve static files dari root directory
+app.use(express.static(path.join(__dirname, '/')));
+
 // Counter Request Sederhana
 let globalTotalRequests = 0;
 
@@ -35,7 +38,7 @@ app.get('/api/ai/vanz-ai', (req, res) => {
     });
 });
 
-// 2b. AI ENDPOINT (Claude AI - Menggunakan parameter 'q')
+// 2b. AI ENDPOINT (Claude AI)
 app.get('/api/ai/claude', async (req, res) => {
     const { q } = req.query;
 
@@ -264,13 +267,20 @@ app.get('/api/tools/removebg', async (req, res) => {
     }
 });
 
-// 7. 404 NOT FOUND HANDLER (Wajib ditaruh paling bawah)
+// 7. 404 HANDLER (Wajib ditaruh paling bawah)
 app.use((req, res) => {
-    res.status(404).json({
-        status: false,
-        creator: "Vanz API",
-        message: "404 Not Found - Endpoint atau halaman yang Anda cari tidak ditemukan."
-    });
+    // Jika user mengakses URL berawalan /api/ yang tidak ada
+    if (req.path.startsWith('/api/')) {
+        return res.status(404).json({
+            status: false,
+            creator: "Vanz API",
+            message: "404 Not Found - Endpoint API tidak ditemukan."
+        });
+    }
+
+    // Jika user membuka halaman web biasa yang tidak ada (misal /net)
+    res.status(404).sendFile(path.join(__dirname, 'error.html'));
 });
 
 module.exports = app;
+
