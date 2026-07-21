@@ -35,22 +35,21 @@ app.get('/api/ai/vanz-ai', (req, res) => {
     });
 });
 
-// 2b. AI ENDPOINT (Claude AI - Mengakomodasi parameter 'q' atau 'message')
+// 2b. AI ENDPOINT (Claude AI - Menggunakan parameter 'q')
 app.get('/api/ai/claude', async (req, res) => {
-    const { q, message } = req.query;
-    const prompt = q || message;
+    const { q } = req.query;
 
-    if (!prompt) {
+    if (!q) {
         return res.status(400).json({
             status: false,
             creator: "Vanz API",
-            message: "Parameter 'q' atau 'message' wajib diisi salah satu."
+            message: "Parameter 'q' wajib diisi."
         });
     }
 
     try {
         const response = await fetch(
-            `https://api.azbry.com/api/ai/claude?prompt=${encodeURIComponent(prompt)}`
+            `https://api.azbry.com/api/ai/claude?q=${encodeURIComponent(q)}`
         );
 
         const data = await response.json();
