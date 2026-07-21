@@ -20,6 +20,7 @@
             </div>
             <ul class="nav-links">
                 <li><a class="nav-link active" data-target="home">Home</a></li>
+                <li><a class="nav-link" data-target="dashboard">Dashboard</a></li>
                 <li><a class="nav-link" data-target="documentation">Documentation</a></li>
                 <li><a class="nav-link" data-target="endpoints">Endpoints</a></li>
                 <li><a class="nav-link" data-target="status">Status</a></li>
@@ -47,10 +48,12 @@
                     endpoint stabil, dan integrasi mudah.
                 </p>
 
-                <div class="action-buttons">
-                    <button class="btn btn-primary btn-read-docs" onclick="switchTab('documentation')">
+                <div class="action-buttons" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="switchTab('dashboard')">
+                        <i class="fas fa-chart-line"></i> DASHBOARD
+                    </button>
+                    <button class="btn btn-secondary btn-read-docs" style="border: 1px solid rgba(255,255,255,0.2); background: transparent; color: #fff;" onclick="switchTab('documentation')">
                         <i class="fas fa-book-open"></i> READ DOCS
-                        <span class="arrow-right">→</span>
                     </button>
                 </div>
 
@@ -60,6 +63,54 @@
                 </div>
             </div>
         </section>
+
+        <!-- DASHBOARD SECTION -->
+        <section id="dashboard" class="tab-content">
+            <div class="docs-header">
+                <h1 class="section-title">SYSTEM DASHBOARD</h1>
+                <p class="section-subtitle">Ringkasan statistik penggunaan dan informasi perangkat kamu.</p>
+            </div>
+
+            <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                
+                <div class="card" style="display: flex; flex-direction: column; gap: 0.5rem; border-left: 4px solid #3b82f6;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; color: #a3a3a3;">
+                        <span style="font-size: 0.9rem; font-weight: 500;">TOTAL REQUEST (HARI INI)</span>
+                        <i class="fas fa-paper-plane" style="color: #3b82f6;"></i>
+                    </div>
+                    <h2 id="dash-total-req" style="font-size: 2rem; font-weight: 700; margin: 0;">0</h2>
+                    <span style="font-size: 0.75rem; color: #737373;">Dihitung dari Sesi Browser Ini</span>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; gap: 0.5rem; border-left: 4px solid #10b981;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; color: #a3a3a3;">
+                        <span style="font-size: 0.9rem; font-weight: 500;">BATERAI USER</span>
+                        <i class="fas fa-battery-half" style="color: #10b981;"></i>
+                    </div>
+                    <h2 id="dash-battery" style="font-size: 2rem; font-weight: 700; margin: 0;">Memuat...</h2>
+                    <span id="dash-battery-status" style="font-size: 0.75rem; color: #737373;">Mendeteksi status pengisian...</span>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; gap: 0.5rem; border-left: 4px solid #a855f7;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; color: #a3a3a3;">
+                        <span style="font-size: 0.9rem; font-weight: 500;">IP PUBLIC USER</span>
+                        <i class="fas fa-network-wired" style="color: #a855f7;"></i>
+                    </div>
+                    <h2 id="dash-ip" style="font-size: 1.4rem; font-weight: 700; margin: 0; word-break: break-all;">Memuat...</h2>
+                    <span style="font-size: 0.75rem; color: #737373;">Alamat IP Publik Kamu</span>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; gap: 0.5rem; border-left: 4px solid #ec4899;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; color: #a3a3a3;">
+                        <span style="font-size: 0.9rem; font-weight: 500;">TOTAL ENDPOINT</span>
+                        <i class="fas fa-code-branch" style="color: #ec4899;"></i>
+                    </div>
+                    <h2 id="dash-total-endpoints" style="font-size: 2rem; font-weight: 700; margin: 0;">0</h2>
+                    <span style="font-size: 0.75rem; color: #737373;">Aktif & Siap Digunakan</span>
+                </div>
+
+            </div>
+        </div>
 
         <section id="documentation" class="tab-content">
             <div class="docs-header">
