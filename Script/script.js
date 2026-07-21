@@ -1,34 +1,175 @@
-const navLinks = document.querySelectorAll('.nav-link');
-const tabContents = document.querySelectorAll('.tab-content');
+document.addEventListener('DOMContentLoaded', () => {
+    const navLinks = document.querySelectorAll('.nav-link[data-target]');
+    const tabContents = document.querySelectorAll('.tab-content');
 
-navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const targetTab = link.getAttribute('data-target');
-        switchTab(targetTab);
+    function switchTab(targetId) {
+        navLinks.forEach(link => {
+            if (link.getAttribute('data-target') === targetId) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+
+        tabContents.forEach(content => {
+            if (content.id === targetId) {
+                content.classList.add('active');
+            } else {
+                content.classList.remove('active');
+            }
+        });
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = link.getAttribute('data-target');
+            switchTab(target);
+        });
+    });
+
+    window.switchTab = switchTab;
+
+    window.openCategory = function(categoryName) {
+        switchTab('endpoints');
+
+        const groups = document.querySelectorAll('.endpoint-group');
+        groups.forEach(group => {
+            if (group.getAttribute('data-category') === categoryName) {
+                group.style.display = 'block';
+            } else {
+                group.style.display = 'none';
+            }
+        });
+    };
+
+    const apiCards = document.querySelectorAll('.api-card');
+    apiCards.forEach(card => {
+        const inputs = card.querySelectorAll('.api-test-input');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                updateUrlPreview(card);
+            });
+        });
+        updateUrlPreview(card);
     });
 });
 
-function switchTab(tabId) {
-    navLinks.forEach(l => l.classList.remove('active'));
-    tabContents.forEach(c => c.classList.remove('active'));
+function updateUrlPreview(card) {
+    const basePath = card.getAttribute('data-base-path');
+    const type = card.getAttribute('data-type');
+    const displaySpan = card.querySelector('.url-text-display');
+    const domain = 'https://vanz-api-one.vercel.app';
 
-    const activeLink = document.querySelector(`.nav-link[data-target="${tabId}"]`);
-    if (activeLink) activeLink.classList.add('active');
+    let finalUrl = domain + basePath;
 
-    const activeContent = document.getElementById(tabId);
-    if (activeContent) activeContent.classList.add('active');
+    if (type === 'single') {
+        const paramName = card.getAttribute('data-param-name') || 'prompt';
+        const inputVal = card.querySelector('.api-test-input').value.trim();
+        if (inputVal) {
+            finalUrl += `?${paramName}=${encodeURIComponent(inputVal)}`;
+        }
+    } else if (type === 'multi') {
+        const inputs = card.querySelectorAll('.multi-param');
+        const params = [];
+        inputs.forEach(input => {
+            const pName = input.getAttribute('data-param');
+            const pVal = input.value.trim();
+            if (pName && pVal) {
+                params.push(`${pName}=${encodeURIComponent(pVal)}`);
+            }
+        });
+        if (params.length > 0) {
+            finalUrl += '?' + params.join('&');
+        }
+    }
+
+    if (displaySpan) {
+        displaySpan.textContent = finalUrl;
+    }
+    return finalUrl;
 }
 
-function openCategory(catId) {
-    switchTab('endpoints');
-    const groups = document.querySelectorAll('.endpoint-group');
-    groups.forEach(g => {
-        if (g.getAttribute('data-category') === catId) {
-            g.style.display = 'block';
-        } else {
-            g.style.display = 'none';
+async function testRequest(element) {
+    const card = element.closest('.api-card');
+    const resultBox = card.querySelector('.api-result-box');
+    const jsonOutput = card.querySelector('.json-output');
+    const imgContainer = card.querySelector('.image-output-container');
+    const imgOutput = card.querySelector('.image-output');
+    const responseType = card.getAttribute('data-response-type');
+
+    const reqUrl = updateUrlPreview(card);
+
+    resultBox.style.display = 'block';
+    jsonOutput.textContent = 'Loading...';
+    imgContainer.style.display = 'none';
+    imgOutput.src = '';
+
+    try {
+        const res = await fetch(reqUrl);
+
+        if (!res.ok) {
+            let message = `HTTP ${res.status}`;
+            try {
+                const err = await res.json();
+                message = err.message || err.error || message;
+            } catch {}
+            throw new Error(message);
         }
+
+        if (responseType === 'image') {
+            const contentType = res.headers.get('content-type') || '';
+
+            if (contentType.startsWith('image/')) {
+                const blob = await res.blob();
+                const imageUrl = URL.createObjectURL(blob);
+
+                jsonOutput.textContent = JSON.stringify({
+                    status: true,
+                    creator: "Vanz API",
+                    contentType
+                }, null, 2);
+
+                imgOutput.src = imageUrl;
+                imgContainer.style.display = 'block';
+            } else {
+                const data = await res.json();
+                jsonOutput.textContent = JSON.stringify(data, null, 2);
+
+                if (data.result) {
+                    imgOutput.src = data.result;
+                    imgContainer.style.display = 'block';
+                }
+            }
+        } else {
+            const data = await res.json();
+            jsonOutput.textContent = JSON.stringify(data, null, 2);
+        }
+
+    } catch (err) {
+        jsonOutput.textContent = JSON.stringify({
+            status: false,
+            error: "Failed to fetch data",
+            message: err.message
+        }, null, 2);
+    }
+}
+
+function copyUrlFromBox(btn) {
+    const box = btn.closest('.api-url-preview-box');
+    const urlText = box.querySelector('.url-text-display').textContent;
+
+    navigator.clipboard.writeText(urlText).then(() => {
+        const icon = btn.querySelector('i');
+        icon.className = 'fas fa-check';
+        icon.style.color = '#10b981';
+
+        setTimeout(() => {
+            icon.className = 'far fa-copy';
+            icon.style.color = '';
+        }, 2000);
     });
 }
 
@@ -39,90 +180,7 @@ function clearResult(btn) {
     const imgOutput = resultBox.querySelector('.image-output');
 
     jsonOutput.textContent = '';
-    imgOutput.src = '';
-    imgContainer.style.display = 'none';
+    if (imgOutput) imgOutput.src = '';
+    if (imgContainer) imgContainer.style.display = 'none';
     resultBox.style.display = 'none';
-}
-
-function copyUrlFromBox(btn) {
-    const previewBox = btn.closest('.api-url-preview-box');
-    const urlText = previewBox.querySelector('.url-text-display').textContent;
-    navigator.clipboard.writeText(urlText).then(() => {
-        const icon = btn.querySelector('i');
-        icon.className = 'fas fa-check';
-        setTimeout(() => { icon.className = 'far fa-copy'; }, 2000);
-    });
-}
-
-function updateUrlPreview(card) {
-    const basePath = card.getAttribute('data-base-path');
-    const type = card.getAttribute('data-type');
-    const previewText = card.querySelector('.url-text-display');
-    const host = "https://vanz-api-one.vercel.app";
-    let url = host + basePath;
-
-    if (type === 'single') {
-        const paramName = card.getAttribute('data-param-name');
-        const inputEl = card.querySelector('.api-test-input');
-        if (inputEl) {
-            url += `?${paramName}=${encodeURIComponent(inputEl.value)}`;
-        }
-    } else if (type === 'multi') {
-        const inputs = card.querySelectorAll('.multi-param');
-        let parts = [];
-        inputs.forEach(inp => {
-            parts.push(`${inp.getAttribute('data-param')}=${encodeURIComponent(inp.value)}`);
-        });
-        if (parts.length > 0) url += '?' + parts.join('&');
-    }
-
-    if (previewText) {
-        previewText.textContent = url;
-    }
-    return url;
-}
-
-document.querySelectorAll('.api-test-input').forEach(input => {
-    input.addEventListener('input', () => {
-        const card = input.closest('.api-card');
-        updateUrlPreview(card);
-    });
-});
-
-async function testRequest(element) {
-    const card = element.closest('.api-card');
-    const resultBox = card.querySelector('.api-result-box');
-    const jsonOutput = card.querySelector('.json-output');
-    const imgContainer = card.querySelector('.image-output-container');
-    const imgOutput = card.querySelector('.image-output');
-    const responseType = card.getAttribute('data-response-type');
-
-    let reqUrl = updateUrlPreview(card);
-
-    resultBox.style.display = 'block';
-    jsonOutput.textContent = 'Loading...';
-    imgContainer.style.display = 'none';
-
-    try {
-        if (responseType === 'image') {
-            reqUrl += (reqUrl.includes('?') ? '&' : '?') + 'response=json';
-            
-            const res = await fetch(reqUrl);
-            const data = await res.json();
-
-            if (data.status && data.result) {
-                jsonOutput.textContent = JSON.stringify({ status: data.status, creator: data.creator }, null, 2);
-                imgOutput.src = data.result;
-                imgContainer.style.display = 'block';
-            } else {
-                jsonOutput.textContent = JSON.stringify(data, null, 2);
-            }
-        } else {
-            const res = await fetch(reqUrl);
-            const data = await res.json();
-            jsonOutput.textContent = JSON.stringify(data, null, 2);
-        }
-    } catch (err) {
-        jsonOutput.textContent = JSON.stringify({ error: "Failed to fetch data", message: err.message }, null, 2);
-    }
 }
