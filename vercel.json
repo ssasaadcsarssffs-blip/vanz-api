@@ -13,6 +13,10 @@
       "dest": "/index.html"
     },
     {
+      "src": "/documentation",
+      "dest": "/index.html"
+    },
+    {
       "src": "/dashboard",
       "dest": "/index.html"
     },
