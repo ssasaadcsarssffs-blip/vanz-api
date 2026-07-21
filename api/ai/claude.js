@@ -1,17 +1,17 @@
 export default async function handler(req, res) {
-  const { text } = req.query
+  const { prompt } = req.query
 
-  if (!text) {
+  if (!prompt) {
     return res.status(400).json({
       status: false,
       creator: "Vanz API",
-      message: "Parameter 'text' wajib diisi."
+      message: "Parameter 'prompt' wajib diisi."
     })
   }
 
   try {
     const response = await fetch(
-      `https://api.azbry.com/api/ai/claude?text=${encodeURIComponent(text)}`
+      `https://api.azbry.com/api/ai/claude?prompt=${encodeURIComponent(prompt)}`
     )
 
     const data = await response.json()
