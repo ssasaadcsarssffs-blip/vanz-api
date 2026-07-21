@@ -45,7 +45,7 @@
 
                 <p class="hero-description">
                     Layanan API gratis dan andal yang dirancang untuk pengembangan aplikasi modern. 
-                    Dibangun dengan Node.js dan TypeScript, menghadirkan performa cepat, 
+                    Dibangun dengan Node.js dan Express, menghadirkan performa cepat, 
                     endpoint stabil, dan integrasi mudah.
                 </p>
 
@@ -213,35 +213,22 @@
                 </div>
 
                 <!-- Claude AI -->
-                <div class="card api-card" data-base-path="/api/ai/claude" data-type="multi" style="margin-top: 1.5rem;">
+                <div class="card api-card" data-base-path="/api/ai/claude" data-type="single" data-param-name="q" style="margin-top: 1.5rem;">
                     <div class="api-card-header">
                         <span class="endpoint-badge badge-get">GET</span> 
                         <span class="api-path">/api/ai/claude</span>
                     </div>
-                    <p class="api-desc">Berinteraksi dengan model Claude AI. Kamu dapat menggunakan salah satu parameter berikut: <code>q</code> atau <code>message</code>.</p>
+                    <p class="api-desc">Berinteraksi dengan model Claude AI menggunakan parameter input <code>q</code>.</p>
                     
                     <div class="api-test-container">
-                        <div class="api-multi-inputs" style="display: flex; flex-direction: column; gap: 0.8rem; width: 100%;">
-                            <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Parameter Query (q)</label>
-                                <div class="api-input-group" style="width: 100%;">
-                                    <input type="text" class="api-test-input multi-param" data-param="q" placeholder="Contoh: Halo Claude" value="Halo Claude">
-                                </div>
-                            </div>
-                            <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                <label style="font-size: 0.85rem; color: #a3a3a3; font-weight: 500;">Parameter Message (message)</label>
-                                <div class="api-input-group" style="width: 100%;">
-                                    <input type="text" class="api-test-input multi-param" data-param="message" placeholder="Alternatif jika parameter 'q' kosong...">
-                                </div>
-                            </div>
-                            <div style="align-self: flex-end; width: 100%; margin-top: 0.4rem;">
-                                <button class="btn btn-primary" style="padding: 0.8rem; font-size: 1rem; width: 100%; max-width: none;" onclick="testRequest(this)">
-                                    <i class="fas fa-paper-plane"></i> TEST REQUEST
-                                </button>
-                            </div>
+                        <div class="api-input-group">
+                            <input type="text" class="api-test-input" placeholder="Masukkan pertanyaan/prompt di sini..." value="Halo Claude">
+                            <button class="btn-api-send" onclick="testRequest(this)" title="Test Request">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
                         </div>
                         
-                        <div class="api-url-preview-box" style="margin-top: 0.5rem;">
+                        <div class="api-url-preview-box">
                             <span class="url-text-display">https://vanz-api-one.vercel.app/api/ai/claude?q=Halo%20Claude</span>
                             <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
                                 <i class="far fa-copy"></i>
@@ -517,7 +504,7 @@
             <p>Riwayat pembaruan sistem pada VANZ API.</p>
             <div class="card">
                 <h3>Versi 1.1.0 (Terbaru)</h3>
-                <p>• Penambahan endpoint Claude AI <code>/api/ai/claude</code> dengan dukungan dual parameter (<code>q</code> / <code>message</code>).<br>
+                <p>• Penambahan endpoint Claude AI <code>/api/ai/claude</code> dengan parameter <code>q</code>.<br>
                    • Penambahan endpoint baru <code>/api/maker/iqc</code> di kategori Maker.<br>
                    • Perbaikan sistem routing Vercel static filesystem.</p>
             </div>
@@ -541,3 +528,4 @@
     <script src="Script/script.js"></script>
 </body>
 </html>
+
