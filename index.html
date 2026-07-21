@@ -105,7 +105,7 @@
                         <i class="fas fa-tools"></i>
                     </div>
                     <h3>TOOLS</h3>
-                    <p class="endpoint-count">0 endpoints</p>
+                    <p class="endpoint-count">1 endpoint</p>
                 </div>
             </div>
 
@@ -247,6 +247,43 @@
                         
                         <div class="api-url-preview-box">
                             <span class="url-text-display">https://vanz-api-one.vercel.app/api/maker/brat?text=VanzDev</span>
+                            <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+
+                        <div class="api-result-box" style="display: none;">
+                            <div class="api-result-header">
+                                <span>Response Result</span>
+                                <button class="btn-clear-result" onclick="clearResult(this)">Clear</button>
+                            </div>
+                            <pre><code class="json-output"></code></pre>
+                            <div class="image-output-container" style="display: none; padding: 1rem; text-align: center; background: #0a0a0a;">
+                                <img class="image-output" src="" alt="API Result" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint-group" data-category="tools" style="display: none;">
+                <div class="card api-card" data-base-path="/api/tools/removebg" data-type="single" data-param-name="image" data-response-type="image">
+                    <div class="api-card-header">
+                        <span class="endpoint-badge badge-get">GET</span> 
+                        <span class="api-path">/api/tools/removebg</span>
+                    </div>
+                    <p class="api-desc">Menghapus latar belakang (background) dari gambar berdasarkan URL foto yang dikirimkan.</p>
+                    
+                    <div class="api-test-container">
+                        <div class="api-input-group">
+                            <input type="text" class="api-test-input" placeholder="Masukkan URL gambar (https://...)..." value="https://uploader.zenzxz.dpdns.org/uploads/1783937277449.jpeg">
+                            <button class="btn-api-send" onclick="testRequest(this)" title="Test Request">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="api-url-preview-box">
+                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/tools/removebg?image=https%3A%2F%2Fuploader.zenzxz.dpdns.org%2Fuploads%2F1783937277449.jpeg</span>
                             <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
                                 <i class="far fa-copy"></i>
                             </button>
