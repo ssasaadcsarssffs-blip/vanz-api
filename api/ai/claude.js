@@ -16,11 +16,12 @@ export default async function handler(req, res) {
 
     const data = await response.json()
 
+    // Hilangkan creator & source dari API asli
     const { creator, source, ...result } = data
 
     return res.status(response.status).json({
-      ...result,
-      creator: "Vanz API"
+      creator: "Vanz API",
+      ...result
     })
 
   } catch (err) {
