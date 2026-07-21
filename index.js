@@ -1,9 +1,13 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// Menyajikan file statis (CSS, JS, Gambar) dari direktori utama
+app.use(express.static(path.join(__dirname)));
 
 // Counter Request Sederhana
 let globalTotalRequests = 0;
@@ -13,6 +17,11 @@ app.use((req, res, next) => {
         globalTotalRequests++;
     }
     next();
+});
+
+// 0. HOME ROUTE (Menampilkan index.html)
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // 1. STATS ENDPOINT
@@ -34,7 +43,7 @@ app.get('/api/ai/vanz-ai', (req, res) => {
     });
 });
 
-// 3. DOWNLOADER ENDPOINT (All in One - Sesuai Logika Kode Kamu)
+// 3. DOWNLOADER ENDPOINT (All in One)
 app.get('/api/downloader/allinone', async (req, res) => {
     const { url, format = "mp4" } = req.query;
 
@@ -97,16 +106,13 @@ app.get('/api/maker/brat', async (req, res) => {
     }
 
     try {
-        // Mengambil gambar/data dari provider brat
         const response = await fetch(`https://api.azbry.com/api/maker/brat?text=${encodeURIComponent(text)}`);
         
-        // Jika provider mengembalikan JSON
         if (response.headers.get('content-type')?.includes('application/json')) {
             const data = await response.json();
             return res.status(response.status).json(data);
         }
 
-        // Jika provider langsung mengembalikan Buffer/Gambar
         const arrayBuffer = await response.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
         res.setHeader('Content-Type', response.headers.get('content-type') || 'image/png');
@@ -191,3 +197,4 @@ app.get('/api/tools/removebg', async (req, res) => {
 });
 
 module.exports = app;
+
