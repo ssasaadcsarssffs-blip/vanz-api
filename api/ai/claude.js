@@ -16,9 +16,11 @@ export default async function handler(req, res) {
 
     const data = await response.json()
 
+    const { creator, source, ...result } = data
+
     return res.status(response.status).json({
-      creator: "Vanz API",
-      ...data
+      ...result,
+      creator: "Vanz API"
     })
 
   } catch (err) {
