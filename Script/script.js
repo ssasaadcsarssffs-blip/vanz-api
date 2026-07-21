@@ -209,7 +209,6 @@ function loadDashboardData() {
     if (totalEndpointsElem) totalEndpointsElem.textContent = cards.length;
 
     fetchUserIp();
-
     fetchUserBattery();
 }
 
@@ -248,3 +247,4 @@ function fetchUserBattery() {
         batteryStatusElem.textContent = 'Browser tidak mendukung Battery API';
     }
 }
+
