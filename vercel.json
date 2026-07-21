@@ -33,7 +33,7 @@
       "destination": "/index.html"
     },
     {
-      "source": "/((?!api/|Css/|Script/|index.html|error.html).*)",
+      "source": "/(.*)",
       "destination": "/index.js"
     }
   ]
