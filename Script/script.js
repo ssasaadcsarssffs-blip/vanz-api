@@ -2,11 +2,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.nav-link');
     const tabContents = document.querySelectorAll('.tab-content');
 
-    // 1. FUNGSI PINDAH TAB
-    function switchTab(targetId) {
+    const initialPath = window.location.pathname.replace('/', '') || 'home';
+    switchTab(initialPath, false);
+
+    function switchTab(targetId, pushState = true) {
         if (!targetId) return;
 
-        // Update class active pada Nav
+        const validTabs = ['home', 'dashboard', 'documentation', 'endpoints', 'status', 'changelog', 'contact'];
+        if (!validTabs.includes(targetId)) {
+            targetId = 'home';
+        }
+
         navLinks.forEach(link => {
             const target = link.getAttribute('data-target') || link.getAttribute('href')?.replace('#', '');
             if (target === targetId) {
@@ -16,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Update class active pada Section/Tab Content
         tabContents.forEach(content => {
             if (content.id === targetId) {
                 content.classList.add('active');
@@ -25,7 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Load data dashboard jika masuk tab dashboard
+        if (pushState) {
+            const newPath = targetId === 'home' ? '/' : `/${targetId}`;
+            history.pushState({ tab: targetId }, '', newPath);
+        }
+
         if (targetId === 'dashboard') {
             loadDashboardData();
         }
@@ -33,20 +42,23 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Event listener klik menu navigasi
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const target = link.getAttribute('data-target') || link.getAttribute('href')?.replace('#', '');
-            switchTab(target);
+            switchTab(target, true);
         });
+    });
+
+    window.addEventListener('popstate', () => {
+        const currentPath = window.location.pathname.replace('/', '') || 'home';
+        switchTab(currentPath, false);
     });
 
     window.switchTab = switchTab;
 
-    // 2. FUNGSI BUKA KATEGORI ENDPOINTS
     window.openCategory = function(categoryName) {
-        switchTab('endpoints');
+        switchTab('endpoints', true);
 
         const groups = document.querySelectorAll('.endpoint-group');
         groups.forEach(group => {
@@ -58,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Auto-update URL preview saat input diketik
     const apiCards = document.querySelectorAll('.api-card');
     apiCards.forEach(card => {
         const inputs = card.querySelectorAll('.api-test-input');
@@ -70,25 +81,21 @@ document.addEventListener('DOMContentLoaded', () => {
         updateUrlPreview(card);
     });
 
-    // Inisialisasi data dashboard awal
     loadDashboardData();
 
-    // 3. LOGIKA SCROLL / SWIPE (HOME -> DOCUMENTATION)
     let isScrolling = false;
 
-    // Detection Scroll Mouse / Touchpad (PC/Laptop)
     window.addEventListener('wheel', (e) => {
         const activeTab = document.querySelector('.tab-content.active');
         if (activeTab && activeTab.id === 'home' && e.deltaY > 0 && !isScrolling) {
             isScrolling = true;
-            switchTab('documentation');
+            switchTab('documentation', true);
             setTimeout(() => {
                 isScrolling = false;
             }, 800);
         }
     });
 
-    // Detection Swipe Layar (HP/Tablet)
     let touchStartY = 0;
     window.addEventListener('touchstart', (e) => {
         touchStartY = e.touches[0].clientY;
@@ -99,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const touchEndY = e.changedTouches[0].clientY;
         if (activeTab && activeTab.id === 'home' && (touchStartY - touchEndY > 50) && !isScrolling) {
             isScrolling = true;
-            switchTab('documentation');
+            switchTab('documentation', true);
             setTimeout(() => {
                 isScrolling = false;
             }, 800);
@@ -107,7 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
 });
 
-// 4. FUNGSI AUXILIARY (PREVIEW, TEST REQUEST, STATS)
 function updateUrlPreview(card) {
     if (!card) return '';
     const basePath = card.getAttribute('data-base-path') || '';
