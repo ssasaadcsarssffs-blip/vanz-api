@@ -1,16 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const navLinks = document.querySelectorAll('.nav-link[data-target]');
+    const navLinks = document.querySelectorAll('.nav-link');
     const tabContents = document.querySelectorAll('.tab-content');
 
+    // 1. FUNGSI PINDAH TAB
     function switchTab(targetId) {
+        if (!targetId) return;
+
+        // Update class active pada Nav
         navLinks.forEach(link => {
-            if (link.getAttribute('data-target') === targetId) {
+            const target = link.getAttribute('data-target') || link.getAttribute('href')?.replace('#', '');
+            if (target === targetId) {
                 link.classList.add('active');
             } else {
                 link.classList.remove('active');
             }
         });
 
+        // Update class active pada Section/Tab Content
         tabContents.forEach(content => {
             if (content.id === targetId) {
                 content.classList.add('active');
@@ -19,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Load data dashboard jika masuk tab dashboard
         if (targetId === 'dashboard') {
             loadDashboardData();
         }
@@ -26,16 +33,18 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // Event listener klik menu navigasi
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            const target = link.getAttribute('data-target');
+            const target = link.getAttribute('data-target') || link.getAttribute('href')?.replace('#', '');
             switchTab(target);
         });
     });
 
     window.switchTab = switchTab;
 
+    // 2. FUNGSI BUKA KATEGORI ENDPOINTS
     window.openCategory = function(categoryName) {
         switchTab('endpoints');
 
@@ -49,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // Auto-update URL preview saat input diketik
     const apiCards = document.querySelectorAll('.api-card');
     apiCards.forEach(card => {
         const inputs = card.querySelectorAll('.api-test-input');
@@ -60,10 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
         updateUrlPreview(card);
     });
 
+    // Inisialisasi data dashboard awal
     loadDashboardData();
 
+    // 3. LOGIKA SCROLL / SWIPE (HOME -> DOCUMENTATION)
     let isScrolling = false;
 
+    // Detection Scroll Mouse / Touchpad (PC/Laptop)
     window.addEventListener('wheel', (e) => {
         const activeTab = document.querySelector('.tab-content.active');
         if (activeTab && activeTab.id === 'home' && e.deltaY > 0 && !isScrolling) {
@@ -75,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Detection Swipe Layar (HP/Tablet)
     let touchStartY = 0;
     window.addEventListener('touchstart', (e) => {
         touchStartY = e.touches[0].clientY;
@@ -93,17 +107,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
 });
 
+// 4. FUNGSI AUXILIARY (PREVIEW, TEST REQUEST, STATS)
 function updateUrlPreview(card) {
-    const basePath = card.getAttribute('data-base-path');
-    const type = card.getAttribute('data-type');
+    if (!card) return '';
+    const basePath = card.getAttribute('data-base-path') || '';
+    const type = card.getAttribute('data-type') || 'single';
     const displaySpan = card.querySelector('.url-text-display');
-    const domain = 'https://vanz-api-one.vercel.app';
+    const domain = window.location.origin;
 
     let finalUrl = domain + basePath;
 
     if (type === 'single') {
         const paramName = card.getAttribute('data-param-name') || 'prompt';
-        const inputVal = card.querySelector('.api-test-input').value.trim();
+        const inputElem = card.querySelector('.api-test-input');
+        const inputVal = inputElem ? inputElem.value.trim() : '';
         if (inputVal) {
             finalUrl += `?${paramName}=${encodeURIComponent(inputVal)}`;
         }
@@ -138,6 +155,8 @@ async function testRequest(element) {
     incrementRequestCount();
 
     const card = element.closest('.api-card');
+    if (!card) return;
+
     const resultBox = card.querySelector('.api-result-box');
     const jsonOutput = card.querySelector('.json-output');
     const imgContainer = card.querySelector('.image-output-container');
@@ -146,10 +165,10 @@ async function testRequest(element) {
 
     const reqUrl = updateUrlPreview(card);
 
-    resultBox.style.display = 'block';
-    jsonOutput.textContent = 'Loading...';
-    imgContainer.style.display = 'none';
-    imgOutput.src = '';
+    if (resultBox) resultBox.style.display = 'block';
+    if (jsonOutput) jsonOutput.textContent = 'Loading...';
+    if (imgContainer) imgContainer.style.display = 'none';
+    if (imgOutput) imgOutput.src = '';
 
     try {
         const res = await fetch(reqUrl);
@@ -170,60 +189,73 @@ async function testRequest(element) {
                 const blob = await res.blob();
                 const imageUrl = URL.createObjectURL(blob);
 
-                jsonOutput.textContent = JSON.stringify({
-                    status: true,
-                    creator: "Vanz API",
-                    contentType: contentType
-                }, null, 2);
+                if (jsonOutput) {
+                    jsonOutput.textContent = JSON.stringify({
+                        status: true,
+                        creator: "Vanz API",
+                        contentType: contentType
+                    }, null, 2);
+                }
 
-                imgOutput.src = imageUrl;
-                imgContainer.style.display = 'block';
+                if (imgOutput && imgContainer) {
+                    imgOutput.src = imageUrl;
+                    imgContainer.style.display = 'block';
+                }
             } else {
                 const data = await res.json();
-                jsonOutput.textContent = JSON.stringify(data, null, 2);
+                if (jsonOutput) jsonOutput.textContent = JSON.stringify(data, null, 2);
 
-                if (data.result) {
+                if (data.result && imgOutput && imgContainer) {
                     imgOutput.src = data.result;
                     imgContainer.style.display = 'block';
                 }
             }
         } else {
             const data = await res.json();
-            jsonOutput.textContent = JSON.stringify(data, null, 2);
+            if (jsonOutput) jsonOutput.textContent = JSON.stringify(data, null, 2);
         }
 
     } catch (err) {
-        jsonOutput.textContent = JSON.stringify({
-            status: false,
-            error: "Failed to fetch data",
-            message: err.message
-        }, null, 2);
+        if (jsonOutput) {
+            jsonOutput.textContent = JSON.stringify({
+                status: false,
+                error: "Failed to fetch data",
+                message: err.message
+            }, null, 2);
+        }
     }
 }
 
 function copyUrlFromBox(btn) {
     const box = btn.closest('.api-url-preview-box');
-    const urlText = box.querySelector('.url-text-display').textContent;
+    if (!box) return;
+
+    const urlText = box.querySelector('.url-text-display')?.textContent || '';
 
     navigator.clipboard.writeText(urlText).then(() => {
         const icon = btn.querySelector('i');
-        icon.className = 'fas fa-check';
-        icon.style.color = '#10b981';
+        if (icon) {
+            const oldClass = icon.className;
+            icon.className = 'fas fa-check';
+            icon.style.color = '#10b981';
 
-        setTimeout(() => {
-            icon.className = 'far fa-copy';
-            icon.style.color = '';
-        }, 2000);
+            setTimeout(() => {
+                icon.className = oldClass;
+                icon.style.color = '';
+            }, 2000);
+        }
     });
 }
 
 function clearResult(btn) {
     const resultBox = btn.closest('.api-result-box');
+    if (!resultBox) return;
+
     const jsonOutput = resultBox.querySelector('.json-output');
     const imgContainer = resultBox.querySelector('.image-output-container');
     const imgOutput = resultBox.querySelector('.image-output');
 
-    jsonOutput.textContent = '';
+    if (jsonOutput) jsonOutput.textContent = '';
     if (imgOutput) imgOutput.src = '';
     if (imgContainer) imgContainer.style.display = 'none';
     resultBox.style.display = 'none';
@@ -233,7 +265,7 @@ async function loadDashboardData() {
     const totalReqElem = document.getElementById('dash-total-req');
     
     try {
-        const res = await fetch('https://vanz-api-one.vercel.app/api/stats');
+        const res = await fetch('/api/stats');
         if (res.ok) {
             const data = await res.json();
             if (totalReqElem) totalReqElem.textContent = data.totalRequests || '0';
@@ -279,7 +311,9 @@ function fetchUserBattery() {
             function updateBatteryInfo() {
                 const level = Math.round(battery.level * 100);
                 batteryElem.textContent = `${level}%`;
-                batteryStatusElem.textContent = battery.charging ? 'Sedang Diisi (Charging ⚡)' : 'Tidak Diisi (Discharging)';
+                if (batteryStatusElem) {
+                    batteryStatusElem.textContent = battery.charging ? 'Sedang Diisi (Charging ⚡)' : 'Tidak Diisi (Discharging)';
+                }
             }
             updateBatteryInfo();
 
@@ -288,7 +322,7 @@ function fetchUserBattery() {
         });
     } else {
         batteryElem.textContent = 'N/A';
-        batteryStatusElem.textContent = 'Browser tidak mendukung Battery API';
+        if (batteryStatusElem) batteryStatusElem.textContent = 'Browser tidak mendukung Battery API';
     }
 }
 
