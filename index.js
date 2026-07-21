@@ -35,15 +35,16 @@ app.get('/api/ai/vanz-ai', (req, res) => {
     });
 });
 
-// 2b. AI ENDPOINT (Claude AI)
+// 2b. AI ENDPOINT (Claude AI - Mengakomodasi parameter 'q' atau 'message')
 app.get('/api/ai/claude', async (req, res) => {
-    const prompt = req.query.prompt;
+    const { q, message } = req.query;
+    const prompt = q || message;
 
     if (!prompt) {
         return res.status(400).json({
             status: false,
             creator: "Vanz API",
-            message: "Parameter 'prompt' wajib diisi."
+            message: "Parameter 'q' atau 'message' wajib diisi salah satu."
         });
     }
 
@@ -265,3 +266,4 @@ app.get('/api/tools/removebg', async (req, res) => {
 });
 
 module.exports = app;
+
