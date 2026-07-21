@@ -1,54 +1,40 @@
 {
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "index.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "handle": "filesystem"
+      "source": "/api/(.*)",
+      "destination": "/index.js"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "/index.js"
+      "source": "/docs",
+      "destination": "/index.html"
     },
     {
-      "src": "/docs",
-      "dest": "/index.html"
+      "source": "/documentation",
+      "destination": "/index.html"
     },
     {
-      "src": "/documentation",
-      "dest": "/index.html"
+      "source": "/dashboard",
+      "destination": "/index.html"
     },
     {
-      "src": "/dashboard",
-      "dest": "/index.html"
+      "source": "/endpoints",
+      "destination": "/index.html"
     },
     {
-      "src": "/endpoints",
-      "dest": "/index.html"
+      "source": "/status",
+      "destination": "/index.html"
     },
     {
-      "src": "/status",
-      "dest": "/index.html"
+      "source": "/changelog",
+      "destination": "/index.html"
     },
     {
-      "src": "/changelog",
-      "dest": "/index.html"
+      "source": "/contact",
+      "destination": "/index.html"
     },
     {
-      "src": "/contact",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.js"
+      "source": "/((?!api/|Css/|Script/|index.html|error.html).*)",
+      "destination": "/index.js"
     }
   ]
 }
