@@ -264,5 +264,13 @@ app.get('/api/tools/removebg', async (req, res) => {
     }
 });
 
-module.exports = app;
+// 7. 404 NOT FOUND HANDLER (Wajib ditaruh paling bawah)
+app.use((req, res) => {
+    res.status(404).json({
+        status: false,
+        creator: "Vanz API",
+        message: "404 Not Found - Endpoint atau halaman yang Anda cari tidak ditemukan."
+    });
+});
 
+module.exports = app;
