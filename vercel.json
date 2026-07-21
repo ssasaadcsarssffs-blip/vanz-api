@@ -9,7 +9,31 @@
       "dest": "/index.js"
     },
     {
-      "src": "/",
+      "src": "/docs",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/endpoints",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/status",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/changelog",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/contact",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",
       "dest": "/index.html"
     }
   ]
