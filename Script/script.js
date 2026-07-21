@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function switchTab(targetId, pushState = true) {
         if (!targetId) return;
 
+        if (targetId === 'docs') {
+            targetId = 'documentation';
+        }
+
         const validTabs = ['home', 'dashboard', 'documentation', 'endpoints', 'status', 'changelog', 'contact'];
         if (!validTabs.includes(targetId)) {
             targetId = 'home';
@@ -15,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         navLinks.forEach(link => {
             const target = link.getAttribute('data-target') || link.getAttribute('href')?.replace('#', '');
-            if (target === targetId) {
+            if (target === targetId || (target === 'documentation' && targetId === 'docs')) {
                 link.classList.add('active');
             } else {
                 link.classList.remove('active');
@@ -331,4 +335,3 @@ function fetchUserBattery() {
         if (batteryStatusElem) batteryStatusElem.textContent = 'Browser tidak mendukung Battery API';
     }
 }
-
