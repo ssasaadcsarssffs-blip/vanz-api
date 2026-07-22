@@ -10,13 +10,15 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { data } = await axios.get(
-      "https://api.azbry.com/api/download/tiktok",
-      {
-        params: { url },
-        timeout: 30000
-      }
+    const response = await fetch(
+      `https://api.azbry.com/api/download/tiktok?url=${encodeURIComponent(url)}`
     );
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
 
     return res.status(200).json({
       status: true,
@@ -24,12 +26,13 @@ export default async function handler(req, res) {
       model: "TikTok Downloader",
       result: data
     });
+
   } catch (err) {
-    return res.status(err.response?.status || 500).json({
+    return res.status(500).json({
       status: false,
       creator: "Vanz API",
       model: "TikTok Downloader",
-      message: err.response?.data?.message || err.message
+      message: err.message
     });
   }
 }
