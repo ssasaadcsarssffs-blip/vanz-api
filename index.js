@@ -80,7 +80,7 @@ app.get('/api/ai/claude', async (req, res) => {
     }
 });
 
-// 3. DOWNLOADER ENDPOINT (All in One)
+// 3a. DOWNLOADER ENDPOINT (All in One)
 app.get('/api/downloader/allinone', async (req, res) => {
     const { url, format = "mp4" } = req.query;
 
@@ -112,6 +112,48 @@ app.get('/api/downloader/allinone', async (req, res) => {
                 status: false,
                 creator: "Vanz API",
                 message: data.message || "Gagal mengambil data dari provider."
+            });
+        }
+
+        return res.status(200).json({
+            status: true,
+            creator: "Vanz API",
+            result: data.result
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            status: false,
+            creator: "Vanz API",
+            message: err.message
+        });
+    }
+});
+
+// 3b. DOWNLOADER ENDPOINT (TikTok)
+app.get('/api/downloader/tiktok', async (req, res) => {
+    const { url } = req.query;
+
+    if (!url) {
+        return res.status(400).json({
+            status: false,
+            creator: "Vanz API",
+            message: "Parameter 'url' TikTok wajib diisi."
+        });
+    }
+
+    try {
+        const response = await fetch(
+            `https://api.azbry.com/api/download/tiktok?url=${encodeURIComponent(url)}`
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.status) {
+            return res.status(response.status || 500).json({
+                status: false,
+                creator: "Vanz API",
+                message: data.message || "Gagal mengunduh media dari TikTok."
             });
         }
 
@@ -267,9 +309,8 @@ app.get('/api/tools/removebg', async (req, res) => {
     }
 });
 
-// 7. 404 HANDLER (Wajib ditaruh paling bawah)
+// 7. 404 HANDLER (Fallback jika diakses langsung dari server express)
 app.use((req, res) => {
-    // Jika user mengakses URL berawalan /api/ yang tidak ada
     if (req.path.startsWith('/api/')) {
         return res.status(404).json({
             status: false,
@@ -277,10 +318,7 @@ app.use((req, res) => {
             message: "404 Not Found - Endpoint API tidak ditemukan."
         });
     }
-
-    // Jika user membuka halaman web biasa yang tidak ada (misal /net)
     res.status(404).sendFile(path.join(__dirname, 'error.html'));
 });
 
 module.exports = app;
-
