@@ -44,6 +44,13 @@ header {
     gap: 10px;
 }
 
+.nav-logo {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
 .white-dot {
     width: 10px;
     height: 10px;
@@ -600,3 +607,4 @@ footer {
         font-size: 1rem; 
     }
 }
+
