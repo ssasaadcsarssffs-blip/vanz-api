@@ -149,7 +149,7 @@
                         <i class="fas fa-download"></i>
                     </div>
                     <h3>DOWNLOADER</h3>
-                    <p class="endpoint-count">2 endpoints</p>
+                    <p class="endpoint-count">3 endpoints</p>
                 </div>
 
                 <div class="category-card" onclick="openCategory('tools')">
@@ -164,7 +164,7 @@
             <div class="card" style="margin-top: 3rem;">
                 <h3>Base URL</h3>
                 <p>Semua request harus diarahkan ke URL dasar berikut:</p>
-                <pre><code>https://vanz-api-one.vercel.app</code></pre>
+                <pre><code>https://api.vanzweb.my.id</code></pre>
             </div>
         </section>
 
@@ -192,7 +192,7 @@
                         </div>
                         
                         <div class="api-url-preview-box">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/ai/vanz-ai?prompt=Siapa%20kamu%3F</span>
+                            <span class="url-text-display">https://api.vanzweb.my.id/api/ai/vanz-ai?prompt=Siapa%20kamu%3F</span>
                             <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
                                 <i class="far fa-copy"></i>
                             </button>
@@ -228,7 +228,7 @@
                         </div>
                         
                         <div class="api-url-preview-box">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/ai/claude?q=Halo%20Claude</span>
+                            <span class="url-text-display">https://api.vanzweb.my.id/api/ai/claude?q=Halo%20Claude</span>
                             <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
                                 <i class="far fa-copy"></i>
                             </button>
@@ -301,7 +301,7 @@
                         </div>
                         
                         <div class="api-url-preview-box" style="margin-top: 0.5rem;">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/canvas/fakenotif?ppurl=https%3A%2F%2Fuploader.zenzxz.dpdns.org%2Fuploads%2F1783937277449.jpeg&username=ZennzXD&chat=Haii%20sayangg%20udah%20makan%20belumm%3F%20%F0%9F%A5%BA&tanggal=Senin,%206%20Maret&jam=18.30</span>
+                            <span class="url-text-display">https://api.vanzweb.my.id/api/canvas/fakenotif?ppurl=https%3A%2F%2Fuploader.zenzxz.dpdns.org%2Fuploads%2F1783937277449.jpeg&username=ZennzXD&chat=Haii%20sayangg%20udah%20makan%20belumm%3F%20%F0%9F%A5%BA&tanggal=Senin,%206%20Maret&jam=18.30</span>
                             <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
                                 <i class="far fa-copy"></i>
                             </button>
@@ -340,7 +340,7 @@
                         </div>
                         
                         <div class="api-url-preview-box">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/maker/brat?text=VanzDev</span>
+                            <span class="url-text-display">https://api.vanzweb.my.id/api/maker/brat?text=VanzDev</span>
                             <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
                                 <i class="far fa-copy"></i>
                             </button>
@@ -376,7 +376,7 @@
                         </div>
                         
                         <div class="api-url-preview-box">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/maker/iqc?text=Halo%20World</span>
+                            <span class="url-text-display">https://api.vanzweb.my.id/api/maker/iqc?text=Halo%20World</span>
                             <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
                                 <i class="far fa-copy"></i>
                             </button>
@@ -428,7 +428,7 @@
                         </div>
                         
                         <div class="api-url-preview-box" style="margin-top: 0.5rem;">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/downloader/allinone?url=https%3A%2F%2Fvt.tiktok.com%2FZSXXtFL7c&format=mp3</span>
+                            <span class="url-text-display">https://api.vanzweb.my.id/api/downloader/allinone?url=https%3A%2F%2Fvt.tiktok.com%2FZSXXtFL7c&format=mp3</span>
                             <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
                                 <i class="far fa-copy"></i>
                             </button>
@@ -464,7 +464,43 @@
                         </div>
                         
                         <div class="api-url-preview-box">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/downloader/tiktok?url=https%3A%2F%2Fvt.tiktok.com%2FZSXXtFL7c</span>
+                            <span class="url-text-display">https://api.vanzweb.my.id/api/downloader/tiktok?url=https%3A%2F%2Fvt.tiktok.com%2FZSXXtFL7c</span>
+                            <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+
+                        <div class="api-result-box" style="display: none;">
+                            <div class="api-result-header">
+                                <span>Response Result</span>
+                                <button class="btn-clear-result" onclick="clearResult(this)">Clear</button>
+                            </div>
+                            <pre><code class="json-output"></code></pre>
+                            <div class="image-output-container" style="display: none; padding: 1rem; text-align: center; background: #0a0a0a;">
+                                <img class="image-output" src="" alt="API Result" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All-in-One Downloader V2 -->
+                <div class="card api-card" data-base-path="/api/downloader/aiov2" data-type="single" data-param-name="url" style="margin-top: 1.5rem;">
+                    <div class="api-card-header">
+                        <span class="endpoint-badge badge-get">GET</span> 
+                        <span class="api-path">/api/downloader/aiov2</span>
+                    </div>
+                    <p class="api-desc">Mengunduh media dari berbagai platform pendukung secara otomatis menggunakan parameter URL.</p>
+                    
+                    <div class="api-test-container">
+                        <div class="api-input-group">
+                            <input type="text" class="api-test-input" placeholder="Masukkan URL media di sini..." value="https://vt.tiktok.com/ZSXXtFL7c">
+                            <button class="btn-api-send" onclick="testRequest(this)" title="Test Request">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="api-url-preview-box">
+                            <span class="url-text-display">https://api.vanzweb.my.id/api/downloader/aiov2?url=https%3A%2F%2Fvt.tiktok.com%2FZSXXtFL7c</span>
                             <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
                                 <i class="far fa-copy"></i>
                             </button>
@@ -502,7 +538,7 @@
                         </div>
                         
                         <div class="api-url-preview-box">
-                            <span class="url-text-display">https://vanz-api-one.vercel.app/api/tools/removebg?image=https%3A%2F%2Fuploader.zenzxz.dpdns.org%2Fuploads%2F1783937277449.jpeg</span>
+                            <span class="url-text-display">https://api.vanzweb.my.id/api/tools/removebg?image=https%3A%2F%2Fuploader.zenzxz.dpdns.org%2Fuploads%2F1783937277449.jpeg</span>
                             <button class="btn-copy-url" onclick="copyUrlFromBox(this)" title="Salin URL">
                                 <i class="far fa-copy"></i>
                             </button>
