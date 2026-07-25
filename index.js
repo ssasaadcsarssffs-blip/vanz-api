@@ -172,6 +172,48 @@ app.get('/api/downloader/tiktok', async (req, res) => {
     }
 });
 
+// 3c. DOWNLOADER ENDPOINT (AIO V2)
+app.get('/api/downloader/aiov2', async (req, res) => {
+    const { url } = req.query;
+
+    if (!url) {
+        return res.status(400).json({
+            status: false,
+            creator: "Vanz API",
+            message: "Parameter 'url' wajib diisi."
+        });
+    }
+
+    try {
+        const response = await fetch(
+            `https://api.azbry.com/api/download/allinonev2?url=${encodeURIComponent(url)}`
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.status) {
+            return res.status(response.status || 500).json({
+                status: false,
+                creator: "Vanz API",
+                message: data.message || "Gagal mengunduh media dari provider AIO V2."
+            });
+        }
+
+        return res.status(200).json({
+            status: true,
+            creator: "Vanz API",
+            result: data.result
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            status: false,
+            creator: "Vanz API",
+            message: err.message
+        });
+    }
+});
+
 // 4a. MAKER ENDPOINT (Brat)
 app.get('/api/maker/brat', async (req, res) => {
     const text = req.query.text;
@@ -322,3 +364,4 @@ app.use((req, res) => {
 });
 
 module.exports = app;
+
