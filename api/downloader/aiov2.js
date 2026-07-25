@@ -36,18 +36,34 @@ export default async function handler(req, res) {
       }
     )
 
-    const json = await response.json()
+    const text = await response.text()
+
+    let json
+    try {
+      json = JSON.parse(text)
+    } catch {
+      return res.status(200).json({
+        status: false,
+        creator: "Vanz API",
+        response_status: response.status,
+        raw: text
+      })
+    }
 
     return res.status(200).json({
       status: true,
       creator: "Vanz API",
-      result: json.data || json
+      response_status: response.status,
+      headers: Object.fromEntries(response.headers.entries()),
+      raw: json
     })
+
   } catch (e) {
     return res.status(500).json({
       status: false,
       creator: "Vanz API",
-      message: e.message
+      error: e.message,
+      stack: e.stack
     })
   }
 }
