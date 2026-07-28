@@ -2,6 +2,7 @@
   "name": "vanz-api",
   "version": "1.0.0",
   "description": "Vanz Rest API Serverless",
+  "type": "module",
   "main": "index.js",
   "dependencies": {
     "@napi-rs/canvas": "^0.1.44",
