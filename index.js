@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const axios = require('axios');
+const WinkEnhancer = require('./lib/WinkEnhancer');
 const app = express();
 
 app.use(cors());
@@ -351,6 +353,49 @@ app.get('/api/tools/removebg', async (req, res) => {
     }
 });
 
+// 6b. TOOLS ENDPOINT (HD Image)
+app.get('/api/tools/hdimage', async (req, res) => {
+    const { url } = req.query;
+
+    if (!url) {
+        return res.status(400).json({
+            status: false,
+            creator: "Vanz API",
+            message: "Parameter 'url' wajib diisi."
+        });
+    }
+
+    try {
+        const response = await axios.get(url, {
+            responseType: "arraybuffer",
+            timeout: 60000,
+            headers: {
+                "User-Agent": "Mozilla/5.0"
+            }
+        });
+
+        const enhancer = new WinkEnhancer();
+
+        const result = await enhancer.generate({
+            imageBuffer: Buffer.from(response.data),
+            mimeType: response.headers["content-type"]
+        });
+
+        return res.json({
+            status: true,
+            creator: "Vanz API",
+            result: result
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            status: false,
+            creator: "Vanz API",
+            message: err.message
+        });
+    }
+});
+
 // 7. 404 HANDLER (Fallback jika diakses langsung dari server express)
 app.use((req, res) => {
     if (req.path.startsWith('/api/')) {
@@ -364,4 +409,3 @@ app.use((req, res) => {
 });
 
 module.exports = app;
-
