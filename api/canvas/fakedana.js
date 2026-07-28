@@ -1,18 +1,17 @@
 import axios from "axios"
-import FormData from "form-data"
-import { createCanvas, loadImage, GlobalFonts } from "@napi-rs/canvas"
 import fs from "fs"
 import path from "path"
+import { createCanvas, loadImage, GlobalFonts } from "@napi-rs/canvas"
 
-const TMP = "/tmp"
+const TMP_DIR = "/tmp"
 
-const FONT_URL = "https://cdn.jsdelivr.net/fontsource/fonts/plus-jakarta-sans@latest/latin-600-normal.ttf"
 const BG_URL = "https://raw.githubusercontent.com/ryyntwx/Image-rinn/refs/heads/main/fkedana.png"
 const ICON_URL = "https://raw.githubusercontent.com/ryyntwx/Image-rinn/refs/heads/main/IMG-20260726-WA1031.jpg"
+const FONT_URL = "https://cdn.jsdelivr.net/fontsource/fonts/plus-jakarta-sans@latest/latin-600-normal.ttf"
 
-const FONT_PATH = path.join(TMP, "jakarta.ttf")
+const FONT_PATH = path.join(TMP_DIR, "custom-font.ttf")
 
-let loaded = false
+let fontLoaded = false
 
 async function getBuffer(url) {
     const res = await axios.get(url, {
@@ -25,47 +24,24 @@ async function getBuffer(url) {
     return Buffer.from(res.data)
 }
 
-async function loadAssets() {
-    if (loaded) return
+async function loadFont() {
+    if (fontLoaded) return
 
     if (!fs.existsSync(FONT_PATH)) {
-        const font = await getBuffer(FONT_URL)
-        fs.writeFileSync(FONT_PATH, font)
+        const fontBuffer = await getBuffer(FONT_URL)
+        fs.writeFileSync(FONT_PATH, fontBuffer)
     }
 
     try {
-        GlobalFonts.registerFromPath(FONT_PATH, "Jakarta")
+        GlobalFonts.registerFromPath(FONT_PATH, "CustomFont")
     } catch {}
 
-    loaded = true
+    fontLoaded = true
 }
-
-
-async function uploadImage(buffer) {
-    const form = new FormData()
-
-    form.append("file", buffer, {
-        filename: "fakedana.png",
-        contentType: "image/png"
-    })
-
-    const res = await axios.post(
-        "https://cloud.yardansh.com/upload",
-        form,
-        {
-            headers: form.getHeaders()
-        }
-    )
-
-    return res.data.url
-}
-
 
 export default async function handler(req, res) {
     try {
-
-        const { saldo, response } = req.query
-
+        const { saldo } = req.query
 
         if (!saldo) {
             return res.status(400).json({
@@ -77,27 +53,18 @@ export default async function handler(req, res) {
             })
         }
 
-
-        await loadAssets()
-
+        await loadFont()
 
         const [bgBuffer, iconBuffer] = await Promise.all([
             getBuffer(BG_URL),
             getBuffer(ICON_URL)
         ])
 
-
         const bg = await loadImage(bgBuffer)
         const icon = await loadImage(iconBuffer)
 
-
-        const canvas = createCanvas(
-            bg.width,
-            bg.height
-        )
-
+        const canvas = createCanvas(bg.width, bg.height)
         const ctx = canvas.getContext("2d")
-
 
         ctx.drawImage(
             bg,
@@ -107,68 +74,40 @@ export default async function handler(req, res) {
             canvas.height
         )
 
-
         const text = saldo.toString()
 
-        let size = 40
+        let fontSize = 40
 
-        ctx.font = `${size}px Jakarta`
+        ctx.font = `${fontSize}px CustomFont`
 
         while (
             ctx.measureText(text).width > 350 &&
-            size > 15
+            fontSize > 15
         ) {
-            size -= 2
-            ctx.font = `${size}px Jakarta`
+            fontSize -= 2
+            ctx.font = `${fontSize}px CustomFont`
         }
 
-
-        ctx.fillStyle = "#ffffff"
+        ctx.fillStyle = "#FFFFFF"
         ctx.textAlign = "left"
         ctx.textBaseline = "middle"
 
-        const x = 150
-        const y = 80
+        const textX = 150
+        const textY = 80
 
+        ctx.fillText(text, textX, textY)
 
-        ctx.fillText(
-            text,
-            x,
-            y
-        )
-
+        const textWidth = ctx.measureText(text).width
 
         ctx.drawImage(
             icon,
-            x + ctx.measureText(text).width + 15,
-            y - 15,
+            textX + textWidth + 10,
+            textY - 15,
             30,
             30
         )
 
-
         const buffer = await canvas.encode("png")
-
-
-        // optional JSON base64
-        if (response === "json") {
-            return res.status(200).json({
-                status: true,
-                creator: "VanzWeb",
-                idea: "by Rin",
-                result:
-                    `data:image/png;base64,${buffer.toString("base64")}`
-            })
-        }
-
-
-        // optional proxy uploader
-        // const url = await uploadImage(buffer)
-        // const img = await axios.get(url, {
-        //     responseType: "arraybuffer"
-        // })
-        // return res.send(Buffer.from(img.data))
-
 
         res.setHeader(
             "Content-Type",
@@ -182,16 +121,15 @@ export default async function handler(req, res) {
 
         return res.status(200).send(buffer)
 
-
-    } catch (e) {
+    } catch (err) {
+        console.error(err)
 
         return res.status(500).json({
             status: false,
             code: 500,
             creator: "VanzWeb",
-            message: e.message,
+            message: err.message,
             idea: "by Rin"
         })
-
     }
 }
