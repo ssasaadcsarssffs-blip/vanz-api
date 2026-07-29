@@ -1,55 +1,49 @@
-import axios from "axios";
+app.get("/api/tools/hdimage", async (req, res) => {
+    let { url, mode = "hd" } = req.query;
 
-export default async function handler(req, res) {
-  if (req.method !== "GET") {
-    return res.status(405).json({
-      status: false,
-      code: 405,
-      creator: "VanzWeb",
-      message: "Method Not Allowed"
-    });
-  }
+    if (!url) {
+        return res.status(400).json({
+            status: false,
+            creator: "Vanz API",
+            message: "Parameter 'url' wajib diisi."
+        });
+    }
 
-  const { url, mode = "hd" } = req.query;
+    mode = mode.toLowerCase().trim();
 
-  if (!url) {
-    return res.status(400).json({
-      status: false,
-      code: 400,
-      creator: "VanzWeb",
-      message: "Parameter 'url' diperlukan."
-    });
-  }
+    if (mode === "ultrahd" || mode === "ultra_hd")
+        mode = "ultra hd";
 
-  if (!["hd", "ultrahd"].includes(mode.toLowerCase())) {
-    return res.status(400).json({
-      status: false,
-      code: 400,
-      creator: "VanzWeb",
-      message: "Parameter 'mode' hanya boleh 'hd' atau 'ultrahd'."
-    });
-  }
+    if (!["hd", "ultra hd"].includes(mode)) {
+        return res.status(400).json({
+            status: false,
+            creator: "Vanz API",
+            message: "Mode hanya boleh 'hd' atau 'ultra hd'."
+        });
+    }
 
-  try {
-    const { data } = await axios.get(
-      "https://api.azbry.com/api/tools/wink",
-      {
-        params: {
-          url,
-          mode: mode.toLowerCase()
-        },
-        timeout: 120000
-      }
-    );
+    try {
+        const { data } = await axios.get(
+            "https://api.azbry.com/api/tools/wink",
+            {
+                params: {
+                    url,
+                    mode
+                },
+                timeout: 120000,
+                headers: {
+                    "User-Agent": "Mozilla/5.0"
+                }
+            }
+        );
 
-    return res.status(200).json(data);
+        return res.status(200).json(data);
 
-  } catch (err) {
-    return res.status(500).json({
-      status: false,
-      code: 500,
-      creator: "VanzWeb",
-      message: err.response?.data?.message || err.message
-    });
-  }
-}
+    } catch (err) {
+        return res.status(err.response?.status || 500).json({
+            status: false,
+            creator: "Vanz API",
+            message: err.response?.data?.message || err.message
+        });
+    }
+});
