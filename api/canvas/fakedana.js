@@ -11,23 +11,31 @@ const TTF_URL = 'https://cdn.jsdelivr.net/fontsource/fonts/plus-jakarta-sans@lat
 const BG_URL = 'https://raw.githubusercontent.com/ryyntwx/Image-rinn/refs/heads/main/fkedana.png';
 const EYE_URL = 'https://raw.githubusercontent.com/ryyntwx/Image-rinn/refs/heads/main/IMG-20260726-WA1031.jpg';
 
-async function initAssets() {
-  const headers = { 'User-Agent': 'Mozilla/5.0' };
+async function fetchBuffer(url) {
+  const res = await axios.get(url, {
+    responseType: 'arraybuffer',
+    headers: { 'User-Agent': 'Mozilla/5.0' }
+  });
+  const contentType = res.headers['content-type'] || '';
+  if (contentType.includes('text/html') || contentType.includes('application/json')) {
+    throw new Error(`Gagal mengunduh aset dari ${url} (Response bukan gambar)`);
+  }
+  return Buffer.from(res.data);
+}
 
+async function initAssets() {
   if (!fontLoaded) {
-    const fontRes = await axios.get(TTF_URL, { responseType: 'arraybuffer', headers });
-    GlobalFonts.register(Buffer.from(fontRes.data), 'DANA');
+    const fontData = await fetchBuffer(TTF_URL);
+    GlobalFonts.register(fontData, 'DANA');
     fontLoaded = true;
   }
 
   if (!bgBuffer) {
-    const bgRes = await axios.get(BG_URL, { responseType: 'arraybuffer', headers });
-    bgBuffer = Buffer.from(bgRes.data);
+    bgBuffer = await fetchBuffer(BG_URL);
   }
 
   if (!eyeBuffer) {
-    const eyeRes = await axios.get(EYE_URL, { responseType: 'arraybuffer', headers });
-    eyeBuffer = Buffer.from(eyeRes.data);
+    eyeBuffer = await fetchBuffer(EYE_URL);
   }
 }
 
