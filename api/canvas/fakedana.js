@@ -1,5 +1,6 @@
 import { createCanvas, loadImage, GlobalFonts } from '@napi-rs/canvas';
 import axios from 'axios';
+import FormData from 'form-data';
 
 const CREATOR = 'Vanz API';
 
@@ -18,9 +19,23 @@ async function fetchBuffer(url) {
   });
   const contentType = res.headers['content-type'] || '';
   if (contentType.includes('text/html') || contentType.includes('application/json')) {
-    throw new Error(`Gagal mengunduh aset dari ${url} (Response bukan gambar)`);
+    throw new Error(`Aset di ${url} tidak ditemukan atau bukan format gambar valid.`);
   }
   return Buffer.from(res.data);
+}
+
+async function uploadToCDN(imageBuffer) {
+  const form = new FormData();
+  form.append('file', imageBuffer, {
+    filename: 'fakedana.png',
+    contentType: 'image/png'
+  });
+
+  const res = await axios.post('https://cloud.yardansh.com/upload', form, {
+    headers: form.getHeaders()
+  });
+
+  return res.data.url;
 }
 
 async function initAssets() {
@@ -103,9 +118,13 @@ export default async function handler(req, res) {
 
     const imageBuffer = await canvas.encode('png');
 
-    res.setHeader('Content-Type', 'image/png');
-    res.setHeader('Cache-Control', 'public, max-age=86400');
-    return res.status(200).send(imageBuffer);
+    const imageUrl = await uploadToCDN(imageBuffer);
+
+    return res.status(200).json({
+      creator: CREATOR,
+      status: true,
+      result: imageUrl
+    });
 
   } catch (error) {
     console.error('API Error:', error);
