@@ -1,135 +1,110 @@
-import axios from "axios"
-import fs from "fs"
-import path from "path"
-import { createCanvas, loadImage, GlobalFonts } from "@napi-rs/canvas"
+import { createCanvas, loadImage, GlobalFonts } from '@napi-rs/canvas';
+import axios from 'axios';
 
-const TMP_DIR = "/tmp"
+const CREATOR = 'Vanz API';
 
-const BG_URL = "https://raw.githubusercontent.com/ryyntwx/Image-rinn/refs/heads/main/fkedana.png"
-const ICON_URL = "https://raw.githubusercontent.com/ryyntwx/Image-rinn/refs/heads/main/IMG-20260726-WA1031.jpg"
-const FONT_URL = "https://cdn.jsdelivr.net/fontsource/fonts/plus-jakarta-sans@latest/latin-600-normal.ttf"
+let fontLoaded = false;
+let bgBuffer = null;
+let eyeBuffer = null;
 
-const FONT_PATH = path.join(TMP_DIR, "custom-font.ttf")
+const TTF_URL = 'https://cdn.jsdelivr.net/fontsource/fonts/plus-jakarta-sans@latest/latin-600-normal.ttf';
+const BG_URL = 'https://raw.githubusercontent.com/ryyntwx/Image-rinn/refs/heads/main/fkedana.png';
+const EYE_URL = 'https://raw.githubusercontent.com/ryyntwx/Image-rinn/refs/heads/main/IMG-20260726-WA1031.jpg';
 
-let fontLoaded = false
+async function initAssets() {
+  const headers = { 'User-Agent': 'Mozilla/5.0' };
 
-async function getBuffer(url) {
-    const res = await axios.get(url, {
-        responseType: "arraybuffer",
-        headers: {
-            "User-Agent": "Mozilla/5.0"
-        }
-    })
+  if (!fontLoaded) {
+    const fontRes = await axios.get(TTF_URL, { responseType: 'arraybuffer', headers });
+    GlobalFonts.register(Buffer.from(fontRes.data), 'DANA');
+    fontLoaded = true;
+  }
 
-    return Buffer.from(res.data)
-}
+  if (!bgBuffer) {
+    const bgRes = await axios.get(BG_URL, { responseType: 'arraybuffer', headers });
+    bgBuffer = Buffer.from(bgRes.data);
+  }
 
-async function loadFont() {
-    if (fontLoaded) return
-
-    if (!fs.existsSync(FONT_PATH)) {
-        const fontBuffer = await getBuffer(FONT_URL)
-        fs.writeFileSync(FONT_PATH, fontBuffer)
-    }
-
-    try {
-        GlobalFonts.registerFromPath(FONT_PATH, "CustomFont")
-    } catch {}
-
-    fontLoaded = true
+  if (!eyeBuffer) {
+    const eyeRes = await axios.get(EYE_URL, { responseType: 'arraybuffer', headers });
+    eyeBuffer = Buffer.from(eyeRes.data);
+  }
 }
 
 export default async function handler(req, res) {
-    try {
-        const { saldo } = req.query
+  if (req.method !== 'GET') {
+    return res.status(405).json({
+      creator: CREATOR,
+      error: 405,
+      message: 'Method not allowed. Use GET.'
+    });
+  }
 
-        if (!saldo) {
-            return res.status(400).json({
-                status: false,
-                code: 400,
-                creator: "VanzWeb",
-                message: "Missing required parameter.",
-                idea: "by Rin"
-            })
-        }
+  const saldo = req.query.saldo || req.query.text;
 
-        await loadFont()
+  if (!saldo) {
+    return res.status(400).json({
+      creator: CREATOR,
+      error: 400,
+      message: "parameter 'saldo' diperlukan"
+    });
+  }
 
-        const [bgBuffer, iconBuffer] = await Promise.all([
-            getBuffer(BG_URL),
-            getBuffer(ICON_URL)
-        ])
+  try {
+    await initAssets();
 
-        const bg = await loadImage(bgBuffer)
-        const icon = await loadImage(iconBuffer)
+    const bgImg = await loadImage(bgBuffer);
+    const eyeImg = await loadImage(eyeBuffer);
 
-        const canvas = createCanvas(bg.width, bg.height)
-        const ctx = canvas.getContext("2d")
+    const canvas = createCanvas(bgImg.width, bgImg.height);
+    const ctx = canvas.getContext('2d');
 
-        ctx.drawImage(
-            bg,
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        )
+    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
 
-        const text = saldo.toString()
+    const valX = 138;
+    const valY = 52;
+    const maxFontSize = 37;
+    const eyeGap = 7;
+    const eyeScale = 1.3;
 
-        let fontSize = 40
+    const inputSaldo = saldo.trim();
 
-        ctx.font = `${fontSize}px CustomFont`
+    let currentFontSize = maxFontSize;
+    const maxAllowedWidth = canvas.width - valX - 100;
 
-        while (
-            ctx.measureText(text).width > 350 &&
-            fontSize > 15
-        ) {
-            fontSize -= 2
-            ctx.font = `${fontSize}px CustomFont`
-        }
+    ctx.font = `600 ${currentFontSize}px DANA`;
+    let textWidth = ctx.measureText(inputSaldo).width;
 
-        ctx.fillStyle = "#FFFFFF"
-        ctx.textAlign = "left"
-        ctx.textBaseline = "middle"
-
-        const textX = 150
-        const textY = 80
-
-        ctx.fillText(text, textX, textY)
-
-        const textWidth = ctx.measureText(text).width
-
-        ctx.drawImage(
-            icon,
-            textX + textWidth + 10,
-            textY - 15,
-            30,
-            30
-        )
-
-        const buffer = await canvas.encode("png")
-
-        res.setHeader(
-            "Content-Type",
-            "image/png"
-        )
-
-        res.setHeader(
-            "Cache-Control",
-            "public, max-age=86400"
-        )
-
-        return res.status(200).send(buffer)
-
-    } catch (err) {
-        console.error(err)
-
-        return res.status(500).json({
-            status: false,
-            code: 500,
-            creator: "VanzWeb",
-            message: err.message,
-            idea: "by Rin"
-        })
+    while (textWidth > maxAllowedWidth && currentFontSize > 16) {
+      currentFontSize -= 2;
+      ctx.font = `600 ${currentFontSize}px DANA`;
+      textWidth = ctx.measureText(inputSaldo).width;
     }
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText(inputSaldo, valX, valY);
+
+    const eyeHeight = currentFontSize * eyeScale;
+    const eyeWidth = (eyeImg.width / eyeImg.height) * eyeHeight;
+    const eyeX = valX + textWidth + eyeGap;
+    const eyeY = valY + (currentFontSize - eyeHeight) / 2;
+
+    ctx.drawImage(eyeImg, eyeX, eyeY, eyeWidth, eyeHeight);
+
+    const imageBuffer = await canvas.encode('png');
+
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    return res.status(200).send(imageBuffer);
+
+  } catch (error) {
+    console.error('API Error:', error);
+    return res.status(500).json({
+      creator: CREATOR,
+      error: 500,
+      message: error.message || 'Internal Server Error'
+    });
+  }
 }
