@@ -5,23 +5,20 @@ import FormData from 'form-data';
 const CREATOR = 'Vanz API';
 
 let fontLoaded = false;
-let bgBuffer = null;
-let eyeBuffer = null;
+let bgDataUri = null;
+let eyeDataUri = null;
 
 const TTF_URL = 'https://cdn.jsdelivr.net/fontsource/fonts/plus-jakarta-sans@latest/latin-600-normal.ttf';
 const BG_URL = 'https://raw.githubusercontent.com/ryyntwx/Image-rinn/refs/heads/main/fkedana.png';
 const EYE_URL = 'https://raw.githubusercontent.com/ryyntwx/Image-rinn/refs/heads/main/IMG-20260726-WA1031.jpg';
 
-async function fetchBuffer(url) {
+async function fetchAsDataUri(url, mimeType) {
   const res = await axios.get(url, {
     responseType: 'arraybuffer',
     headers: { 'User-Agent': 'Mozilla/5.0' }
   });
-  const contentType = res.headers['content-type'] || '';
-  if (contentType.includes('text/html') || contentType.includes('application/json')) {
-    throw new Error(`Aset di ${url} tidak ditemukan atau bukan format gambar valid.`);
-  }
-  return Buffer.from(res.data);
+  const base64 = Buffer.from(res.data).toString('base64');
+  return `data:${mimeType};base64,${base64}`;
 }
 
 async function uploadToCDN(imageBuffer) {
@@ -40,17 +37,20 @@ async function uploadToCDN(imageBuffer) {
 
 async function initAssets() {
   if (!fontLoaded) {
-    const fontData = await fetchBuffer(TTF_URL);
-    GlobalFonts.register(fontData, 'DANA');
+    const fontRes = await axios.get(TTF_URL, {
+      responseType: 'arraybuffer',
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    });
+    GlobalFonts.register(Buffer.from(fontRes.data), 'DANA');
     fontLoaded = true;
   }
 
-  if (!bgBuffer) {
-    bgBuffer = await fetchBuffer(BG_URL);
+  if (!bgDataUri) {
+    bgDataUri = await fetchAsDataUri(BG_URL, 'image/png');
   }
 
-  if (!eyeBuffer) {
-    eyeBuffer = await fetchBuffer(EYE_URL);
+  if (!eyeDataUri) {
+    eyeDataUri = await fetchAsDataUri(EYE_URL, 'image/jpeg');
   }
 }
 
@@ -76,8 +76,8 @@ export default async function handler(req, res) {
   try {
     await initAssets();
 
-    const bgImg = await loadImage(bgBuffer);
-    const eyeImg = await loadImage(eyeBuffer);
+    const bgImg = await loadImage(bgDataUri);
+    const eyeImg = await loadImage(eyeDataUri);
 
     const canvas = createCanvas(bgImg.width, bgImg.height);
     const ctx = canvas.getContext('2d');
@@ -135,3 +135,4 @@ export default async function handler(req, res) {
     });
   }
 }
+
